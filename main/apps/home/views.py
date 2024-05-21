@@ -174,7 +174,7 @@ class PostDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
 
 
 class BotListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
-    extra_context = {'segment': 'bot'}
+    extra_context = {'segment': 'bs'}
     model = Bot
     template_name = 'home/bot_list.html'
     context_object_name = 'bots'
@@ -182,6 +182,7 @@ class BotListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
 
 class BotUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = Bot
+    extra_context = {'segment': 'bot'}
     template_name = 'crud/bot_create.html'
     form_class = BotForm
     success_url = '/bot_update/1'

@@ -10,6 +10,7 @@ urlpatterns = [
 
     path('', views.ves_v_norme_redirect, name='ves_v_norme_redirect'),
     path('bot', views.index, name='home'),
+    path('bot_list', views.BotListView.as_view(), name='bot list'),
     path('update_post_is_sent', views.update_post_is_sent, name='update_post_is_sent'),
     path('user_profile_update/<int:pk>', views.UserSettingsUpdateView.as_view(), name='user update view'),
     path('user_profile/<int:pk>', views.UserUpdateView.as_view(), name='user profile'),

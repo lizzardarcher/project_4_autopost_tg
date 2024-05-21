@@ -42,6 +42,12 @@
                         <p>Бот</p>
                     </a>
                 </li>
+                <li class="{% if 'bs' in segment %} active {% endif %}">
+                    <a href="/bot_list">
+                        <i class="tim-icons icon-button-power"></i>
+                        <p>Мои боты</p>
+                    </a>
+                </li>
                 <li class="{% if 'user' in segment %} active {% endif %}">
                     <a href="/user_profile/{{ user.id }}">
                         <i class="tim-icons icon-single-02"></i>
