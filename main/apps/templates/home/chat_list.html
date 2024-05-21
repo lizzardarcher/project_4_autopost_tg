@@ -1,0 +1,95 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Чаты {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+{% if messages %}
+<div class="col-md-6">
+    {% for message in messages %}
+    <div class="alert alert-success">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b> <i class="fa fa-check"></i> {{ message|safe }}</b></span>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="row mt-5">
+    <div class="col-md-12">
+        <div class="card">
+            <h3 class="ml-3 mt-3">Чаты и Каналы</h3>
+            <div class="row ml-1">
+                <div class="col-2">
+                    <a href="/chat_create">
+                        <div class="btn btn-simple btn-info">+ Добавить</div>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="toolbar">
+
+                </div>
+                <table id="datatable" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th><a href="/chats?ordering={% if '-id' in request.GET.ordering %}id{% else %}-id{% endif %}">
+                            <h6># ID</h6></a></th>
+                        <th>
+                            <a href="/chats?ordering={% if '-title' in request.GET.ordering %}title{% else %}-title{% endif %}">
+                                <h6>Название</h6></a></th>
+                        <th>
+                            <a href="/chats?ordering={% if '-reference' in request.GET.ordering %}reference{% else %}-reference{% endif %}">
+                                <h6>Ссылка</h6></a></th>
+                        <th>чат ID</th>
+                        <th>Image</th>
+<!--                        <th>День</th>-->
+                        <th>Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for chat in chats %}
+                    <tr>
+                        <td>{{ chat.id }}</td>
+                        <td>{{ chat.title }}</td>
+                        <td>{{ chat.reference }}<br><span class="badge badge-danger">{% if chat.error%}{{chat.error}}
+                            <br>Сообщение об ошибке удалится при добавлении Бота в
+                            группу в качестве администратора и после
+                            успешной публикации в группу сообщения{% endif %}</span></td>
+                        <td>{{ chat.chat_id }}</td>
+                        <td>
+                            <div class="">
+                                <img class="img img-thumbnail" style="border-radius:50%;max-width:75px"
+                                     {% if 'data' not in chat.image %}
+                                         src="/media/{{ chat.image }}"
+                                     {% else %}
+                                         src="{{ chat.image }}"
+                                     {% endif %}>
+                            </div>
+                        </td>
+<!--                        <td>{{ chat.day }}</td>-->
+                        <td>
+                            <a href="/chat_update/{{ chat.id }}"
+                               class="btn btn-link btn-warning btn-icon btn-sm edit"><i
+                                    class="tim-icons icon-pencil"></i></a>
+                            <a href="/chat_delete/{{ chat.id }}"
+                               class="btn btn-link btn-danger btn-icon btn-sm remove"><i
+                                    class="tim-icons icon-simple-remove"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

@@ -1,0 +1,78 @@
+<div class="sidebar" data="{{ settings.primary_color }}">
+    <div class="sidebar-wrapper">
+        <div class="logo">
+            <a rel="sponsored noopener noreferrer"
+               href="/bot" class="simple-text logo-mini">
+                # 0.7
+            </a>
+            <a rel="sponsored noopener noreferrer"
+               href="/bot" class="simple-text logo-normal">
+                Post App
+            </a>
+        </div>
+        <ul class="nav">
+            {% if request.user.is_authenticated %}
+                <li class="{% if 'index' in segment %} active {% endif %}">
+                    <a href="/bot">
+                        <i class="tim-icons icon-chart-pie-36"></i>
+                        <p>Главная</p>
+                    </a>
+                </li>
+                <li class="{% if 'post' in segment %} active {% endif %}">
+                    <a href="/posts">
+                        <i class="tim-icons icon-paper"></i>
+                        <p>Посты</p>
+                    </a>
+                </li>
+                <li class="{% if 'poll' in segment %} active {% endif %}">
+                    <a href="/polls">
+                        <i class="tim-icons icon-bullet-list-67"></i>
+                        <p>Опросы</p>
+                    </a>
+                </li>
+                <li class="{% if 'chat' in segment %} active {% endif %}">
+                    <a href="/chats">
+                        <i class="tim-icons icon-chat-33"></i>
+                        <p>Чаты</p>
+                    </a>
+                </li>
+                <li class="{% if 'bot' in segment %} active {% endif %}">
+                    <a href="/bot_update/1">
+                        <i class="tim-icons icon-send"></i>
+                        <p>Бот</p>
+                    </a>
+                </li>
+                <li class="{% if 'user' in segment %} active {% endif %}">
+                    <a href="/user_profile/{{ user.id }}">
+                        <i class="tim-icons icon-single-02"></i>
+                        <p>Профиль</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <i class="tim-icons icon-button-power"></i>
+                        <p>Выйти</p>
+                    </a>
+                </li>
+
+                {% if request.user.is_superuser %}
+<!--                    <li class="dropdown nav-item">-->
+<!--                        <a href="/admin">-->
+<!--                            <i class="tim-icons icon-app"></i>-->
+<!--                            <p>Администратор</p>-->
+<!--                        </a>-->
+<!--                    </li>-->
+                {% endif %}
+                                      <div class="col-2">
+                            <a href="/update_post_is_sent">
+                                <div onclick="return confirm('Остановить Бота и отметить опубликованные посты неотправленными? ' +
+                     'Бот будет остановлен. Все посты, которые были отправлены, будут помечены как неотправленные')"
+                                     class="btn btn-danger">
+                                    Остановить Бота и пометить сообщения как непрочитанные
+                                </div>
+                            </a>
+                        </div>
+            {% endif %}
+        </ul>
+    </div>
+</div>

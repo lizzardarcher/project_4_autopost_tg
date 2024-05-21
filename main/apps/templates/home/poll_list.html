@@ -1,0 +1,142 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Опросы {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+{% if messages %}
+<div class="col-md-6">
+    {% for message in messages %}
+    <div class="alert alert-success">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b> <i class="fa fa-check"></i> {{ message|safe }}</b></span>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="row mt-5">
+    <div class="col-md-12">
+        <div class="card">
+            <h3 class="ml-3 mt-3">Опросы</h3>
+            <div class="row ml-1">
+                <div class="col-2">
+                    <a href="/poll_create?page={{ page_obj.number }}">
+                        <div class="btn btn-simple btn-info">+ Добавить</div>
+                    </a>
+                </div>
+
+            </div>
+            <div class="card-body">
+                <div class="toolbar">
+                    {% if is_paginated %}
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="/polls?page={{ page_obj.previous_page_number }}">
+                                <i class="tim-icons icon-double-left" aria-hidden="true"></i>
+                            </a>
+                            {% endif %}
+                            {% for i in paginator.page_range %}
+                            {% if page_obj.number == i %}
+                        <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                        {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="/polls?page={{ page_obj.next_page_number }}">
+                                <i class="tim-icons icon-double-right" aria-hidden="true"></i>
+                            </a>
+                            {% endif %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <table id="datatable" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            <a href="/polls?ordering={% if '-day' in request.GET.ordering %}day{% else %}-day{% endif %}">
+                                <h6>День</h6></a></th>
+                        <th>Текст</th>
+                        <th>
+                            <a href="/polls?ordering={% if '-is_sent' in request.GET.ordering %}is_sent{% else %}-is_sent{% endif %}">
+                                <h6>Отправлен</h6></a></th>
+                        <th>Время</th>
+                        <th>Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for poll in polls %}
+                    <tr>
+                        <td>{{ poll.day }}</td>
+                        <td>
+                            {{ poll.question }}
+                            {% if poll.option_1 %}<p>* {{ poll.option_1 }}</p>{% endif %}
+                            {% if poll.option_2 %}<p>* {{ poll.option_2 }}</p>{% endif %}
+                            {% if poll.option_3 %}<p>* {{ poll.option_3 }}</p>{% endif %}
+                            {% if poll.option_4 %}<p>* {{ poll.option_4 }}</p>{% endif %}
+                            {% if poll.option_5 %}<p>* {{ poll.option_5 }}</p>{% endif %}
+                            {% if poll.option_6 %}<p>* {{ poll.option_6 }}</p>{% endif %}
+                            {% if poll.option_7 %}<p>* {{ poll.option_7 }}</p>{% endif %}
+                            {% if poll.option_8 %}<p>* {{ poll.option_8 }}</p>{% endif %}
+                            {% if poll.option_9 %}<p>* {{ poll.option_9 }}</p>{% endif %}
+                            {% if poll.option_10 %}<p>* {{ poll.option_10 }}</p>{% endif %}
+                        </td>
+                        <td>{% if poll.is_sent %}<span class="badge badge-success">Да</span>{% else %}<span
+                                class="badge badge-warning">Нет</span>{% endif %}
+                        </td>
+                        <td><span class="badge badge-info">{{ poll.post_time }}</span></td>
+                        <td>
+                            <a href="/poll_update/{{ poll.id }}?page={{ page_obj.number }}"
+                               class="btn btn-link btn-warning btn-icon btn-sm edit"><i
+                                    class="tim-icons icon-pencil"></i></a>
+                            <a href="/poll_delete/{{ poll.id }}"
+                               class="btn btn-link btn-danger btn-icon btn-sm remove"><i
+                                    class="tim-icons icon-simple-remove"></i></a>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                <!--  PAGINATION BOTTOM -->
+
+                {% if is_paginated %}
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="/polls?page={{ page_obj.previous_page_number }}">
+                            <i class="tim-icons icon-double-left" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                        {% for i in paginator.page_range %}
+                        {% if page_obj.number == i %}
+                    <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="/polls?page={{ page_obj.next_page_number }}">
+                            <i class="tim-icons icon-double-right" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                </ul>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

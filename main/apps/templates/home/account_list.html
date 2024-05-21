@@ -1,0 +1,77 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Login {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+    {% if messages %}
+        <div class="col-md-6">
+            {% for message in messages %}
+                <div class="alert alert-success">
+                    <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="tim-icons icon-simple-remove"></i>
+                    </button>
+                    <span><b> <i class="fa fa-check"></i> {{ message|safe }}</b></span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card">
+                <h3 class="ml-3 mt-3">List of apple accounts</h3>
+                <div class="row ml-1">
+                    <div class="col-2">
+                        <a href="/apple_account_create"><div class="btn btn-simple btn-info">+ Add account</div></a>
+                    </div>
+                    <div class="">
+                        <a href="/apple_account_upload"><div class="btn btn-simple btn-info">+ Upload account list</div></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="toolbar">
+
+                    </div>
+                    <table id="datatable" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Login</th>
+                            <th>Password</th>
+                            <th>Is Active</th>
+                            <th>Report</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for account in accounts %}
+                            <tr>
+                                <td>{{ account.id }}</td>
+                                <td>{{ account.login }}</td>
+                                <td>{{ account.password }}</td>
+                                <td>{{ account.is_active }}</td>
+                                <td>{{ account.report }}</td>
+                                <td>
+                                    <a href="/apple_account_update/{{ account.id }}"
+                                       class="btn btn-link btn-warning btn-icon btn-sm edit"><i
+                                            class="tim-icons icon-pencil"></i></a>
+                                    <a href="/apple_account_delete/{{ account.id }}"
+                                       class="btn btn-link btn-danger btn-icon btn-sm remove"><i
+                                            class="tim-icons icon-simple-remove"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

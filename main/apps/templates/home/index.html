@@ -1,0 +1,143 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Главная {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-12 col-lg-4">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="info-icon text-center icon-warning">
+                            <i class="tim-icons icon-chat-33"></i>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="numbers">
+                            <p class="card-category">Чаты | Каналы</p>
+                            <h3 class="card-title">{{ chats|length }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <hr>
+                <div class="stats">
+                    <div class="card-footer text-center mb-3 mt-3">
+                        <a href="/chats">
+                            <button class="btn btn-round btn-just-icon btn-secondary">Перейти</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="info-icon text-center icon-info">
+                            <i class="tim-icons icon-send"></i>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="numbers">
+                            <p class="card-category">Посты</p>
+                            <h3 class="card-title">{{ posts|length }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <hr>
+                <div class="stats">
+                    <div class="card-footer text-center mb-3 mt-3">
+                        <a href="/posts">
+                            <button class="btn btn-round btn-just-icon btn-secondary">Перейти</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-0 col-lg-4"></div>
+
+    <div class="col-12 col-lg-8">
+        <div class="card-body">
+            <p>
+                <a class="btn btn-secondary" data-toggle="collapse" href="#collapseExample" role="button"
+                   aria-expanded="false" aria-controls="collapseExample">
+                    Возможности и функционал Административной панели Telegram App
+                </a>
+            </p>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <div class="typography-line">
+                        <h5 class="blockquote blockquote-primary"><span>1.</span><i class="tim-icons icon-paper"></i>
+                            Добавлять, удалять, редактировать публикации для отправки в Телеграм каналы и чаты.
+                            к каждому посту можно прикрепить один медиафайл(видео, аудио, фото).</h5>
+                    </div>
+                    <div class="typography-line">
+                        <h5 class="blockquote blockquote-primary"><span>1.1</span><i
+                                class="tim-icons icon-calendar-60"></i>
+                            <br>При добавлении поста, указывается в какой день по порядку он будет выходить.</h5>
+                    </div>
+                    <div class="typography-line">
+                        <h5 class="blockquote blockquote-primary"><span>1.2</span><i
+                                class="tim-icons icon-watch-time"></i>
+                            <br>Посту указывается конкретное время в формате часы:минуты, когда он должен выходить.</h5>
+                    </div>
+                    <div class="typography-line">
+                        <h5 class="blockquote blockquote-primary"><span>2.</span><i class="tim-icons icon-send"></i>
+                            <br>Добавлять, удалять, редактировать группы и каналы телеграма, в которые будут
+                            рассылаться посты.</h5>
+                    </div>
+                    <div class="typography-line">
+                        <h5 class="blockquote blockquote-primary"><span>2.1</span><i
+                                class="tim-icons icon-single-copy-04"></i>
+                            <br>Чаты и каналы добавляются по ссылке на них вида: <i>https://t.me/blabalbla</i></h5>
+                    </div>
+                    <div class="typography-line">
+                        <h5 class="blockquote blockquote-primary"><span>2.2</span><i
+                                class="tim-icons icon-single-copy-04"></i>
+                            <br>Публикации в чаты и каналы может быть осуществлена начиная с конкретного дня работы Бота.</h5>
+                    </div>
+                    <div class="typography-line">
+                        <h5 class="blockquote blockquote-primary"><span>3.</span><i class="tim-icons icon-bold"></i>
+                            <br>Имеется возможность редактировать в профиле внешний вид интерфейса.
+                            Выбирать светлую или тёмную тему. Выбирать основной цвет.</h5>
+                    </div>
+                    <div class="typography-line">
+                        <h5 class="blockquote blockquote-primary"><span>4.</span>
+                            <i class="tim-icons icon-atom"></i>
+                            <br>Рассылка организована по следующему принципу:
+                            <br>1. Выбираем дату и время старта для бота.
+                            <br>2. Нажимаем кнопку старта.
+                            <br>3. Бот рассылает посты по порядку в следующей последовательности: с начала идут посты
+                            1-го дня
+                            по указанному в постах времени,
+                            затем 2-го дня, 3-го и т.д. во все группы и каналы, указанные в админ-панели. Также бот
+                            должен
+                            являться администратором этих групп и каналов
+                            в приложении телеграм.
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}
+<!-- Specific Page JS goes HERE  -->
+
+{% block javascripts %}
+{% endblock javascripts %}

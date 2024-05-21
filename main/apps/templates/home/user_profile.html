@@ -1,0 +1,129 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+
+        {% if messages %}
+        <div class="col-md-6">
+            {% for message in messages %}
+            <div class="alert alert-success">
+                <button type="button" aria-hidden="true" class="close" data-dismiss="alert"
+                        aria-label="Close">
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
+                <span><b> <i class="fa fa-check"></i>{{ message }}</b></span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="title">Profile</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/user_profile/{{ request.user.id }}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Логин</label>
+                                <input type="text" class="form-control" value="{{ request.user.username }}"
+                                       name="username">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email</label>
+                                <input type="email" class="form-control" value="{{ request.user.email }}"
+                                       name="email">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-simple btn-info"> Подтвердить изменения <i
+                                        class="tim-icons icon-check-2"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <h4>Текущие настройки:</h4>
+                            <p>Основной цвет: <span class="text-warning">{{ settings.primary_color|capfirst }}</span>
+                            </p>
+                            <p>Тема: <span class="text-warning">{% if settings.main_theme %}Light{% else %}Dark{% endif %}</span>
+                            </p>
+                            <p>Time Zone: <span class="text-warning">{{ settings.tz }}</span></p>
+                        </div>
+                        <div class="col-8">
+                            <a href="/user_profile_update/{{ request.user.id }}"
+                               class="btn btn-secondary"><i class="tim-icons icon-settings-gear-63"></i> Настройки</a>
+                        </div>
+                        <div class="col-8">
+                            <a href="/users/password_change" class="btn btn-secondary ">Сменить Пароль</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-user">
+            <div class="card-body">
+                <p class="card-text">
+                    <div class="author">
+                        <div class="block block-one"></div>
+                        <div class="block block-two"></div>
+                        <div class="block block-three"></div>
+                        <div class="block block-four"></div>
+                        <a href="javascript:void(0)">
+                            <h1><i class="tim-icons icon-single-02"></i></h1>
+                            <h4 class="title">
+                                {{ request.user.username }}
+                            </h4>
+                        </a>
+                <p class="description">
+                    {{ request.user.email }}
+                </p>
+            </div>
+            </p>
+
+        </div>
+        <div class="card-footer">
+            <div class="button-container">
+
+                <a href="https://t.me/tg_post_app">
+                    <button class="btn btn-icon btn-round btn-social">
+                        <i class="fab fa-telegram-plane"></i>
+                    </button>
+                </a>
+
+                <a href="https://vk.com/tg_post_app">
+                    <button class="btn btn-icon btn-round btn-twitter">
+                        <i class="fab fa-vk"></i>
+                    </button>
+                </a>
+
+                <a href="https://whatsapp.com/tg_post_app">
+                    <button class="btn btn-icon btn-round btn-google">
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76" href="/main/staticfiles/assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="/main/staticfiles/images/favicon.png">
+    <link rel="canonical" href="https://appseed.us/admin-dashboards/django-dashboard-black">
+    <div style="display: none"><a target="_blank" href="https://icons8.com/icon/9F6L4WZapjjU/template">Template</a> icon
+        by <a target="_blank" href="https://icons8.com">Icons8</a></div>
+
+    <title>
+        Вес норма - {% block title %}{% endblock %} | Бот
+    </title>
+
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet"/>
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <!-- Nucleo Icons -->
+    <link href="/main/staticfiles/assets/css/nucleo-icons.css" rel="stylesheet"/>
+    <!-- CSS Files -->
+    <link href="/main/staticfiles/assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet"/>
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="/main/staticfiles/assets/demo/demo.css" rel="stylesheet"/>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76"
+          href="https://appsrv1-147a1.kxcdn.com/black-dashboard-pro-v1.1.2/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="https://appsrv1-147a1.kxcdn.com/black-dashboard-pro-v1.1.2/img/favicon.png">
+
+    <link rel="canonical" href="https://appseed.us/product/black-dashboard-pro/django/">
+    <meta name="google-site-verification" content="kCT200-J0rfczENRkJQdYCqsDKkUo3Hvr3KZic_otwU"/>
+
+    <title>
+        TG admin app
+    </title>
+
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet"/>
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <!-- Nucleo Icons -->
+    <link href="https://appsrv1-147a1.kxcdn.com/black-dashboard-pro-v1.1.2/css/nucleo-icons.css" rel="stylesheet"/>
+    <!-- CSS Files -->
+    <link href="https://appsrv1-147a1.kxcdn.com/black-dashboard-pro-v1.1.2/css/black-dashboard.css?v=1.1.1"
+          rel="stylesheet"/>
+    <link href="https://appsrv1-147a1.kxcdn.com/black-dashboard-pro-v1.1.2/css/theme-switcher.css" rel="stylesheet"/>
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="https://appsrv1-147a1.kxcdn.com/black-dashboard-pro-v1.1.2/demo/demo.css" rel="stylesheet"/>
+
+
+    <!-- Specific Page CSS goes HERE  -->
+    {% block stylesheets %}{% endblock stylesheets %}
+
+</head>
+
+<body class="{{ settings.main_theme }}">
+
+<div class="wrapper">
+    {% include 'includes/sidebar.html' %}
+
+    <div class="main-panel" data="{{ settings.primary_color }}">
+
+        {% include 'includes/navigation.html' %}
+
+        <div class="content">
+
+<!--            <div class="col-12">-->
+<!--                <div class="alert alert-info">-->
+<!--                    <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">-->
+<!--                        <i class="tim-icons icon-simple-remove"></i>-->
+<!--                    </button>-->
+<!--                    <span><b><i class="tim-icons icon-alert-circle-exc"></i> Приложение находится на стадии активного тестирования.</b></span>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            {% block content %}{% endblock content %}
+
+        </div>
+
+        {% include 'includes/footer.html' %}
+
+    </div>
+
+</div>
+
+{% include 'includes/fixed-plugin.html' %}
+
+{% include 'includes/scripts.html' %}
+
+{% include 'includes/scripts-sidebar.html' %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
+
+</body>
+
+</html>
