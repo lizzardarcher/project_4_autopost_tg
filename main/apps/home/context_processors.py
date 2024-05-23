@@ -23,4 +23,5 @@ def user_settings(request):
         'day': day,
         'bot_name_1': Bot.objects.get(pk=1).title,
         'bot_name_2': Bot.objects.get(pk=2).title,
+        'bot_selected': UserSettings.objects.filter(user_id=request.user.id)[0].bot_selected
     }

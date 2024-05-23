@@ -30,13 +30,13 @@
             <ul class="navbar-nav ml-auto">
 
                 <li class="nav-item mt-2">
-                    <a class="btn btn-primary" href="/change_bot_selected/1"><i class="tim-icons icon-atom"></i>{{ bot_name_1 }}</a>
-                    <a class="btn btn-primary" href="/change_bot_selected/2"><i class="tim-icons icon-atom"></i>{{ bot_name_2}}</a>
+                    <a class="btn {% if bot_selected.title == bot_name_1 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/1"><i class="tim-icons icon-send"></i> {{ bot_name_1 }} {% if bot_selected.title == bot_name_1 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %}</a>
+                    <a class="btn {% if bot_selected.title == bot_name_2 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/2"><i class="tim-icons icon-send"></i> {{ bot_name_2 }} {% if bot_selected.title == bot_name_2 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %}</a>
                 </li>
 
                 <li class="nav-item mt-2">
                     {% if is_running %}
-                    <a href="/bot_update/1"><span class="badge badge-success">Бот Активен | День - <span class="badge badge-warning">{{ day }}</span></span></a>
+                    <a href="/bot_update/{{ bot_selected.id }}"><span class="badge badge-success">Бот Активен | День - <span class="badge badge-warning">{{ day }}</span></span></a>
                     {% else %}
                         <span class="badge badge-warning">Бот Неактивен</span>
                     {% endif %}

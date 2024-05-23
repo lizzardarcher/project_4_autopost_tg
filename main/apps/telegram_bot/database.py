@@ -110,7 +110,55 @@ class DataBase:
         return data
 
     @staticmethod
+    def get_posts_by_bot_id(val) -> list:
+        data = []
+        try:
+            con = sql.connect(DATA_BASE, check_same_thread=False, timeout=100)
+            cur = con.cursor()
+            data = cur.execute(
+                'SELECT day, text, media_file, post_time, is_sent, id FROM home_post WHERE is_sent = ? AND day = ? AND bot_id=?'
+                'ORDER BY day', val).fetchall()
+            con.close()
+        except:
+            print(traceback.format_exc())
+        # print(data)
+        return data
+
+
+    @staticmethod
     def get_polls(val) -> list:
+        data = []
+        try:
+            con = sql.connect(DATA_BASE, check_same_thread=False, timeout=100)
+            cur = con.cursor()
+            data = cur.execute(
+                'SELECT day, '
+                'question, '
+                'post_time, '
+                'is_sent, '
+                'option_1, '
+                'option_2, '
+                'option_3, '
+                'option_4, '
+                'option_5, '
+                'option_6, '
+                'option_7, '
+                'option_8, '
+                'option_9, '
+                'option_10, '
+                'is_anonymous, '
+                'id '
+                'FROM home_poll '
+                'WHERE is_sent = ? AND day = ?'
+                'ORDER BY day', val).fetchall()
+            con.close()
+        except:
+            print(traceback.format_exc())
+
+        return data
+
+    @staticmethod
+    def get_polls_by_bot_id(val) -> list:
         data = []
         try:
             con = sql.connect(DATA_BASE, check_same_thread=False, timeout=100)
@@ -155,6 +203,19 @@ class DataBase:
         return data
 
     @staticmethod
+    def get_bots():
+        data = []
+        try:
+            con = sql.connect(DATA_BASE, check_same_thread=False, timeout=100)
+            cur = con.cursor()
+            data = cur.execute('SELECT token, start_date, is_started, day, id FROM home_bot', ()).fetchall()
+            con.close()
+        except:
+            print(traceback.format_exc())
+        # print(data)
+        return data
+
+    @staticmethod
     def get_chats() -> list:
         data = []
         try:
@@ -177,6 +238,21 @@ class DataBase:
             con = sql.connect(DATA_BASE, check_same_thread=False, timeout=100)
             cur = con.cursor()
             d = cur.execute('SELECT reference, day, chat_id, title FROM home_chat', ()).fetchall()
+            con.close()
+            for i in d:
+                data.append(['@' + i[0].split('/')[-1], i[1], i[2], i[3]])
+        except:
+            print(traceback.format_exc())
+        # print(data)
+        return data
+
+    @staticmethod
+    def get_chats_for_post_by_bot(val) -> list:
+        data = []
+        try:
+            con = sql.connect(DATA_BASE, check_same_thread=False, timeout=100)
+            cur = con.cursor()
+            d = cur.execute('SELECT reference, day, chat_id, title FROM home_chat WHERE bot_id=?', (val,)).fetchall()
             con.close()
             for i in d:
                 data.append(['@' + i[0].split('/')[-1], i[1], i[2], i[3]])

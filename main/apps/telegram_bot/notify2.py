@@ -5,7 +5,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from database import DataBase
 from threading import Thread
 
-token = DataBase.get_bots()[0][0]
+token = DataBase.get_bots()[1][0]
 bot = TeleBot(token)
 
 
