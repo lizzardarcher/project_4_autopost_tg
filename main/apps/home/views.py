@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Q
 from django.http import HttpResponse
 from django.template import loader
 from django.urls import reverse, reverse_lazy
@@ -69,9 +70,10 @@ class ChatListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
     template_name = 'home/chat_list.html'
     context_object_name = 'chats'
 
-    def get_ordering(self, **kwargs):
-        ordering = self.request.GET.get('ordering', '-id')
-        return ordering
+    def get_queryset(self):
+        qs = self.model.objects.filter(
+            bot=UserSettings.objects.get(user=self.request.user).bot_selected).order_by('-id')
+        return qs
 
 
 class ChatCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
@@ -119,9 +121,10 @@ class PostListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
     context_object_name = 'posts'
     success_message = 'Пост успешно создан!'
 
-    def get_ordering(self, **kwargs):
-        ordering = self.request.GET.get('ordering', ['day', 'post_time'])
-        return ordering
+    def get_queryset(self):
+        qs = self.model.objects.filter(
+            bot=UserSettings.objects.get(user=self.request.user).bot_selected).order_by('day', 'post_time')
+        return qs
 
 
 # class PostByDayListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
@@ -200,9 +203,10 @@ class PollListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
     context_object_name = 'polls'
     success_message = 'Опрос успешно создан!'
 
-    def get_ordering(self, **kwargs):
-        ordering = self.request.GET.get('ordering', ['day', 'post_time'])
-        return ordering
+    def get_queryset(self):
+        qs = self.model.objects.filter(
+            bot=UserSettings.objects.get(user=self.request.user).bot_selected).order_by('day', 'post_time')
+        return qs
 
 
 class PollCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
@@ -242,8 +246,8 @@ class PollDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
 def index(request):
     context = {
         'segment': 'index',
-        'chats': Chat.objects.all(),
-        'posts': Post.objects.all(),
+        'chats': Chat.objects.filter(bot=UserSettings.objects.get(user=request.user).bot_selected),
+        'posts': Post.objects.filter(bot=UserSettings.objects.get(user=request.user).bot_selected),
     }
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
@@ -260,9 +264,9 @@ def update_post_is_sent(request):
         model_qs = Post.objects.all()
         # model_bt = Bot.objects.all()
         for obj in model_qs:
-            Post.objects.all().update(is_sent=False)
-            Bot.objects.all().update(is_started=False)
-            Chat.objects.all().update(day=1)
+            Post.objects.filter(bot=UserSettings.objects.get(user=request.user).bot_selected).update(is_sent=False)
+            Chat.objects.filter(bot=UserSettings.objects.get(user=request.user).bot_selected).update(day=1)
+            Bot.objects.filter(id=UserSettings.objects.get(user=request.user).bot_selected.id).update(is_started=False)
     # html_template = loader.get_template('home/post_list.html')
     # return HttpResponse(html_template.render(context, request))
     return redirect("/posts")
@@ -270,3 +274,8 @@ def update_post_is_sent(request):
 
 def ves_v_norme_redirect(request):
     return redirect('https://ves-v-norme.ru')
+
+
+def change_bot_selected(request, id):
+    UserSettings.objects.filter(user=request.user).update(bot_selected=Bot.objects.get(id=id))
+    return redirect("/bot")

@@ -12,8 +12,9 @@ User = get_user_model()
 class UserSettingsForm(forms.ModelForm):
     class Meta:
         model = UserSettings
-        fields = ['primary_color', 'main_theme', 'tz']
+        fields = ['primary_color', 'main_theme', 'tz', 'bot_selected']
         widgets = {
+            'bot_selected': forms.Select(attrs={'class': 'form-control text-dark'}),
             'primary_color': forms.Select(attrs={'class': 'form-control text-info'}),
             'main_theme': forms.Select(attrs={'class': 'form-control text-info'}),
             'tz': forms.Select(attrs={'class': 'form-control text-info'}),
@@ -24,10 +25,12 @@ class ChatForm(forms.ModelForm):
     class Meta:
         model = Chat
         fields = [
+            'bot',
             'reference',
             'title',
         ]
         widgets = {
+            'bot':forms.Select(attrs={'class': 'form-control text-info'}),
             'reference': forms.TextInput(attrs={'class': 'form-control text-info'}),
             'title': forms.TextInput(attrs={'class': 'form-control text-info'}),
         }
@@ -52,6 +55,7 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
+            'bot',
             'day',
             'text',
             'media_file',
@@ -60,6 +64,8 @@ class PostForm(forms.ModelForm):
             # 'post_type'
         ]
         widgets = {
+            'bot': forms.Select(attrs={'class': 'form-control text-info'}),
+
             # 'post_type': forms.Select(attrs={'class': 'form-control text-info'}),
             'day': forms.Select(attrs={'class': 'form-control text-info'}),
             'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': '...'}),
@@ -72,6 +78,7 @@ class PollForm(forms.ModelForm):
     class Meta:
         model = Poll
         fields = [
+            'bot',
             'day',
             'post_time',
             'question',
@@ -88,6 +95,8 @@ class PollForm(forms.ModelForm):
             'option_10'
         ]
         widgets = {
+            'bot': forms.Select(attrs={'class': 'form-control text-info'}),
+
             'day': forms.Select(attrs={'class': 'form-control text-info'}),
             'post_time': forms.TimeInput(attrs={'class': 'form-control text-info', 'type': 'time'}),
             'question': forms.Textarea(attrs={'class': 'form-control', 'placeholder': '...'}),

@@ -28,6 +28,12 @@
 
         <div class="navbar-collapse collapse" id="navigation" style="">
             <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item mt-2">
+                    <a class="btn btn-primary" href="/change_bot_selected/1"><i class="tim-icons icon-atom"></i>{{ bot_name_1 }}</a>
+                    <a class="btn btn-primary" href="/change_bot_selected/2"><i class="tim-icons icon-atom"></i>{{ bot_name_2}}</a>
+                </li>
+
                 <li class="nav-item mt-2">
                     {% if is_running %}
                     <a href="/bot_update/1"><span class="badge badge-success">Бот Активен | День - <span class="badge badge-warning">{{ day }}</span></span></a>

@@ -33,6 +33,7 @@ urlpatterns = [
 
     path('bot_update/<int:pk>', views.BotUpdateView.as_view(), name='Bot update view'),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    path('change_bot_selected/<int:id>', views.change_bot_selected, name='Change bot selected'),
 
 ]
 

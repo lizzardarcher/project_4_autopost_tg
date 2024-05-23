@@ -14,16 +14,29 @@ class UserSettingsInline(admin.StackedInline):
 
 
 class UserAdmin(BaseUserAdmin):
-    inlines = (UserSettingsInline, )
+    inlines = (UserSettingsInline,)
 
-class ChatAdmin(admin.ModelAdmin):
-    list_display = ('reference', 'title', 'chat_id')
+
 
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Bot)
+# admin.site.register(UserSettings)
 admin.site.register(UserToMail)
 admin.site.register(Post)
 admin.site.register(Poll)
-admin.site.register(Chat, ChatAdmin)
+admin.site.site_url = "/bot"
+
+# @admin.action(description="Mark selected stories as published")
+# def make_bot(modeladmin, request, queryset):
+#     queryset.update(bot=Bot.objects.get(pk=1))
+
+# @admin.register(Post)
+# class PostAdmin(admin.ModelAdmin):
+#     actions = [make_bot]
+
+@admin.register(Chat)
+class ChatAdmin(admin.ModelAdmin):
+    # actions = [make_bot]
+    ...

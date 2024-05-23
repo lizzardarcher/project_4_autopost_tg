@@ -77,6 +77,7 @@ class UserSettings(models.Model):
                                   default='Тёмный',
                                   blank=True, verbose_name='Тема')
     tz = models.CharField(max_length=100, blank=True, default='+06 Yekaterinburg', choices=tz_choice, verbose_name='Time Zone')
+    bot_selected = models.ForeignKey("Bot", on_delete=models.DO_NOTHING, blank=True, null=True, related_name='bot_selected')
 
     def __str__(self):
         return self.user.username
@@ -104,6 +105,7 @@ class Bot(models.Model):
         verbose_name_plural = "Боты"
 
 class Post(models.Model):
+    bot = models.ForeignKey(Bot,null=True, blank=True, on_delete=models.CASCADE, verbose_name='Бот')
     day = models.IntegerField(max_length=100, null=False, blank=False, choices=day_choice,  verbose_name='День по порядку публикации')
     # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пользователь')
     text = models.TextField(max_length=1000, null=True, blank=True, verbose_name='Текст')
@@ -124,6 +126,7 @@ class Post(models.Model):
         verbose_name_plural = "Посты"
 
 class Poll(models.Model):
+    bot = models.ForeignKey(Bot,null=True, blank=True, on_delete=models.CASCADE, verbose_name='Бот')
     day = models.IntegerField(max_length=100, null=False, blank=False, choices=day_choice,  verbose_name='День по порядку публикации')
     is_sent = models.BooleanField(null=True, blank=True, default=False, verbose_name='Отправлено')
     post_time = models.TimeField(null=True, blank=True, verbose_name='Время публикации')
@@ -151,6 +154,7 @@ class Poll(models.Model):
         verbose_name_plural = "Опросы"
 
 class Chat(models.Model):
+    bot = models.ForeignKey(Bot,null=True, blank=True, on_delete=models.CASCADE, verbose_name='Бот')
     # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пользователь')
     reference = models.CharField(max_length=200, null=True, unique=True, validators=[validators.validate_contains_https], verbose_name='Ссылка на чат')
     title = models.CharField(max_length=300, null=True, blank=True, verbose_name='Название чата')
