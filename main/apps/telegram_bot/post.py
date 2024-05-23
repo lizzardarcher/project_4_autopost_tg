@@ -21,8 +21,9 @@ MEDIA_ROOT = '/var/www/html/main/core/static/media/'
 
 
 def post():
-    # print('started')
+    print('started')
     bots = DataBase.get_bots()
+    print(bots)
     for b in bots:
         token = b[0]
         bot = TeleBot(token=token)
@@ -153,17 +154,18 @@ def post():
             # Если нет постов и опросов, то сдвигаемся к следующей дате
             messages = DataBase.get_posts((False, post_bot_day))
             polls = DataBase.get_posts((False, post_bot_day))
-            # print(messages)
+
+            print(messages, polls)
             if not messages and not polls:
                 new_start_date_bot = str(datetime.strptime(start_date_bot, '%Y-%m-%d')
                                          + timedelta(days=1)).split(' ')[0]
                 new_post_bot_day = post_bot_day + 1
                 #  Обновляем день у бота +1
-                DataBase.update_bot_day((new_start_date_bot, new_post_bot_day))
+                DataBase.update_bot_day((new_start_date_bot, new_post_bot_day, bot_id))
                 #  Обновляем день у чатов, у которых день такой же как у бота +1
                 # DataBase.update_chat_day_all((new_post_bot_day, post_bot_day))
 
-
+# post()
 if __name__ == '__main__':
     try:
         while True:

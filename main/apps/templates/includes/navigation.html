@@ -38,7 +38,9 @@
                     {% if is_running %}
                     <a href="/bot_update/{{ bot_selected.id }}"><span class="badge badge-success">Бот Активен | День - <span class="badge badge-warning">{{ day }}</span></span></a>
                     {% else %}
-                        <span class="badge badge-warning">Бот Неактивен</span>
+                        <a href="/bot_update/{{ bot_selected.id }}"><span class="badge badge-warning">Бот Неактивен</span></a>
+                            
+                        
                     {% endif %}
                 </li>
 

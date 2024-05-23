@@ -181,7 +181,7 @@ class DataBase:
                 'is_anonymous, '
                 'id '
                 'FROM home_poll '
-                'WHERE is_sent = ? AND day = ?'
+                'WHERE is_sent = ? AND day = ? AND bot_id=?'
                 'ORDER BY day', val).fetchall()
             con.close()
         except:
@@ -260,6 +260,8 @@ class DataBase:
             print(traceback.format_exc())
         # print(data)
         return data
+
+
 
     @staticmethod
     def get_tz() -> int:
@@ -342,7 +344,7 @@ class DataBase:
         try:
             con = sql.connect(DATA_BASE, check_same_thread=False, timeout=100)
             cur = con.cursor()
-            cur.execute('UPDATE home_bot SET start_date=?, day=?', val)
+            cur.execute('UPDATE home_bot SET start_date=?, day=? WHERE id=?', val)
             con.commit()
             con.close()
         except sql.Error as error:
