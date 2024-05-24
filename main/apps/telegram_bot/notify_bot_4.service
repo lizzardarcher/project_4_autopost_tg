@@ -1,0 +1,15 @@
+[Unit]
+Description=Notify bot accept
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/html/main/apps/telegram_bot
+ExecStart=/usr/bin/python3.7 /var/www/html/main/apps/telegram_bot/notify4.py
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

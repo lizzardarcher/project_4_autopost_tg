@@ -26,48 +26,81 @@
 
         {% if request.user.is_authenticated %}
 
-        <div class="navbar-collapse collapse" id="navigation" style="">
-            <ul class="navbar-nav ml-auto">
+            <div class="navbar-collapse collapse" id="navigation" style="">
+                <ul class="navbar-nav ml-auto">
 
-                <li class="nav-item mt-2">
-                    <a class="btn {% if bot_selected.title == bot_name_1 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/1"><i class="tim-icons icon-send"></i> {{ bot_name_1 }} {% if bot_selected.title == bot_name_1 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %}</a>
-                    <a class="btn {% if bot_selected.title == bot_name_2 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/2"><i class="tim-icons icon-send"></i> {{ bot_name_2 }} {% if bot_selected.title == bot_name_2 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %}</a>
-                </li>
+                    <li class="nav-item mt-2">
+                        <a class="nav-button">{{ bot_selected.title }}</a>
+                    </li>
 
-                <li class="nav-item mt-2">
-                    {% if is_running %}
-                    <a href="/bot_update/{{ bot_selected.id }}"><span class="badge badge-success">Бот Активен | День - <span class="badge badge-warning">{{ day }}</span></span></a>
-                    {% else %}
-                        <a href="/bot_update/{{ bot_selected.id }}"><span class="badge badge-warning">Бот Неактивен</span></a>
-                            
-                        
-                    {% endif %}
-                </li>
+                    <li class="dropdown nav-item">
 
-                <li class="nav-item mt-2">
-                    <a class="{% if 'user_profile_update' in request.path|slugify %}btn-simple{% endif %}" href="/user_profile_update/{{ request.user.id }}"><i class="tim-icons icon-settings-gear-63"></i> Настройки</a>
-                </li>
-                <li class="dropdown nav-item">
-                    <a href="" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                        <a href="" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                            <i class="tim-icons icon-send"></i>
+                            <b class="caret d-none d-lg-block d-xl-block"></b>
+                            <p class="d-lg-none">
+                                Боты
+                            </p>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-navbar">
+                            <li class="nav-link">
+                                <a href="/bot_list" class="nav-item dropdown-item">Боты</a>
+                            </li>
+                            <li class="dropdown-divider"></li>
+                            <li class="nav-link">
+                                <a class="nav-item dropdown-item {% if bot_selected.title == bot_name_1 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/1"><i class="tim-icons icon-send"></i> {{ bot_name_1 }} {% if bot_selected.title == bot_name_1 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %} {% if bot_is_active_1 %}✅{% else %}😴{% endif %}</a>
+                                <a class="nav-item dropdown-item {% if bot_selected.title == bot_name_2 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/2"><i class="tim-icons icon-send"></i> {{ bot_name_2 }} {% if bot_selected.title == bot_name_2 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %} {% if bot_is_active_2 %}✅{% else %}😴{% endif %}</a>
+                                <a class="nav-item dropdown-item {% if bot_selected.title == bot_name_3 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/3"><i class="tim-icons icon-send"></i> {{ bot_name_3 }} {% if bot_selected.title == bot_name_3 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %} {% if bot_is_active_3 %}✅{% else %}😴{% endif %}</a>
+                                <a class="nav-item dropdown-item {% if bot_selected.title == bot_name_4 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/4"><i class="tim-icons icon-send"></i> {{ bot_name_4 }} {% if bot_selected.title == bot_name_4 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %} {% if bot_is_active_4 %}✅{% else %}😴{% endif %}</a>
+                                <a class="nav-item dropdown-item {% if bot_selected.title == bot_name_5 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/5"><i class="tim-icons icon-send"></i> {{ bot_name_5 }} {% if bot_selected.title == bot_name_5 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %} {% if bot_is_active_5 %}✅{% else %}😴{% endif %}</a>
+                                <a class="nav-item dropdown-item {% if bot_selected.title == bot_name_6 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/6"><i class="tim-icons icon-send"></i> {{ bot_name_6 }} {% if bot_selected.title == bot_name_6 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %} {% if bot_is_active_6 %}✅{% else %}😴{% endif %}</a>
+
+                                <a class="nav-item dropdown-item {% if bot_selected.title == bot_name_7 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/7"><i class="tim-icons icon-send"></i> {{ bot_name_7 }} {% if bot_selected.title == bot_name_7 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %} {% if bot_is_active_7 %}✅{% else %}😴{% endif %}</a>
+                                <a class="nav-item dropdown-item {% if bot_selected.title == bot_name_8 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/8"><i class="tim-icons icon-send"></i> {{ bot_name_8 }} {% if bot_selected.title == bot_name_8 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %} {% if bot_is_active_8 %}✅{% else %}😴{% endif %}</a>
+                                <a class="nav-item dropdown-item {% if bot_selected.title == bot_name_9 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/9"><i class="tim-icons icon-send"></i> {{ bot_name_9 }} {% if bot_selected.title == bot_name_9 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %} {% if bot_is_active_9 %}✅{% else %}😴{% endif %}</a>
+                                <a class="nav-item dropdown-item {% if bot_selected.title == bot_name_10 %}btn-success{% else %}btn-light{% endif %}" href="/change_bot_selected/10"><i class="tim-icons icon-send"></i> {{ bot_name_10 }} {% if bot_selected.title == bot_name_10 %}<i class="tim-icons icon-check-2"></i>{% else %}{% endif %} {% if bot_is_active_10 %}✅{% else %}😴{% endif %}</a>
+
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item mt-2">
+                        {% if is_running %}
+                            <a href="/bot_update/{{ bot_selected.id }}"><span class="badge badge-success">Бот Активен | День - <span
+                                    class="badge badge-warning">{{ day }}</span></span></a>
+                        {% else %}
+                            <a href="/bot_update/{{ bot_selected.id }}"><span
+                                    class="badge badge-warning">Бот Неактивен</span></a>
+                        {% endif %}
+                    </li>
+
+                    <li class="nav-item mt-2">
+                        <a class="{% if 'user_profile_update' in request.path|slugify %}btn-simple{% endif %}"
+                           href="/user_profile_update/{{ request.user.id }}"><i
+                                class="tim-icons icon-settings-gear-63"></i> Настройки</a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a href="" class="dropdown-toggle nav-link" data-toggle="dropdown">
                             <i class="tim-icons icon-single-02"></i>
-                        <b class="caret d-none d-lg-block d-xl-block"></b>
-                        <p class="d-lg-none">
-                            Выйти
-                        </p>
-                    </a>
-                    <ul class="dropdown-menu dropdown-navbar">
-                        <li class="nav-link">
-                            <a href="/user_profile/{{ user.id }}" class="nav-item dropdown-item">Профиль</a>
-                        </li>
-                        <li class="dropdown-divider"></li>
-                        <li class="nav-link">
-                            <a href="{% url 'logout' %}" class="nav-item dropdown-item">Выйти</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="separator d-lg-none"></li>
-            </ul>
-        </div>
+                            <b class="caret d-none d-lg-block d-xl-block"></b>
+                            <p class="d-lg-none">
+                                Выйти
+                            </p>
+                        </a>
+                        <ul class="dropdown-menu dropdown-navbar">
+                            <li class="nav-link">
+                                <a href="/user_profile/{{ user.id }}" class="nav-item dropdown-item">Профиль</a>
+                            </li>
+                            <li class="dropdown-divider"></li>
+                            <li class="nav-link">
+                                <a href="{% url 'logout' %}" class="nav-item dropdown-item">Выйти</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="separator d-lg-none"></li>
+                </ul>
+            </div>
         {% endif %}
     </div>
 </nav>
