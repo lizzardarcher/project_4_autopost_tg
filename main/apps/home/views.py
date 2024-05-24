@@ -188,7 +188,7 @@ class BotUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     extra_context = {'segment': 'bot'}
     template_name = 'crud/bot_create.html'
     form_class = BotForm
-    success_url = '/bot_update/1'
+    success_url = '/bot_list'
     success_message = 'Бот успешно обновлён!'
 
 
