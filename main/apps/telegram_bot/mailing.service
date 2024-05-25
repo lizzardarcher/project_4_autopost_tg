@@ -7,7 +7,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/var/www/html/main/apps/telegram_bot
-ExecStart=/usr/bin/python3.7 /var/www/html/main/apps/telegram_bot/mailing.py
+ExecStart=/usr/bin/python3.10 /var/www/html/main/apps/telegram_bot/mailing.py
 RestartSec=10
 Restart=always
 

@@ -36,9 +36,8 @@ def post():
                         bot.send_message(chat_id=user_id[0], text=text_1)
                     except:
                         print(traceback.format_exc())
-                sleep(32)
+                sleep(60/len(bots))
         elif weekday == 1 or weekday == 4:  # 1 & 4
-        # elif weekday == 2 or weekday == 4:
             if current_time == '7:0':
                 user_ids = DataBase.get_user_to_mail()
                 for user_id in user_ids:
@@ -46,14 +45,16 @@ def post():
                         bot.send_message(chat_id=user_id[0], text=text_2)
                     except:
                         print(traceback.format_exc())
-                sleep(32)
+                sleep(60/len(bots))
 
-# while True:
-#     try:
-#         post()
-#         sys.exit()
-#     except KeyboardInterrupt:
-#         print(traceback.format_exc())
-for i in range(15):
-    post()
-    sleep(1)
+while True:
+    try:
+        post()
+        sleep(1)
+        sys.exit()
+    except KeyboardInterrupt:
+        ...
+        # print(traceback.format_exc())
+# for i in range(15):
+#     post()
+#     sleep(1)
