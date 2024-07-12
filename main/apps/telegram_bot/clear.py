@@ -12,7 +12,6 @@ from database import DataBase
 # MEDIA_ROOT = '/var/www/html/main/core/static/media/'
 
 
-
 token = DataBase.get_bot()[0]
 
 bot = TeleBot(token)
