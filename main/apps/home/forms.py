@@ -111,3 +111,8 @@ class PollForm(forms.ModelForm):
             'option_9': forms.Textarea(attrs={'class': 'form-control', 'placeholder': '...'}),
             'option_10': forms.Textarea(attrs={'class': 'form-control', 'placeholder': '...'}),
         }
+
+
+class PostToUserForm(forms.ModelForm):
+    fields = '__all__'
+

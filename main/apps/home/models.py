@@ -76,8 +76,10 @@ class UserSettings(models.Model):
     main_theme = models.CharField(max_length=100, choices=[('white-content', 'Светлый'), ('', 'Тёмный')],
                                   default='Тёмный',
                                   blank=True, verbose_name='Тема')
-    tz = models.CharField(max_length=100, blank=True, default='+06 Yekaterinburg', choices=tz_choice, verbose_name='Time Zone')
-    bot_selected = models.ForeignKey("Bot", on_delete=models.DO_NOTHING, blank=True, null=True, related_name='bot_selected')
+    tz = models.CharField(max_length=100, blank=True, default='+06 Yekaterinburg', choices=tz_choice,
+                          verbose_name='Time Zone')
+    bot_selected = models.ForeignKey("Bot", on_delete=models.DO_NOTHING, blank=True, null=True,
+                                     related_name='bot_selected')
 
     def __str__(self):
         return self.user.username
@@ -85,15 +87,17 @@ class UserSettings(models.Model):
     class Meta:
         verbose_name = 'Settings'
 
-class Bot(models.Model):
 
-    ref = models.CharField(max_length=100, verbose_name='Ссылка на бота', validators=[validators.validate_bot_ref_https])
+class Bot(models.Model):
+    ref = models.CharField(max_length=100, verbose_name='Ссылка на бота',
+                           validators=[validators.validate_bot_ref_https])
     token = models.CharField(max_length=300, verbose_name='Бот Токен')
     title = models.CharField(max_length=300, null=True, blank=True, verbose_name='Назавание бота')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     start_date = models.DateField(null=True, blank=True, verbose_name='Начало работы Бота')
     is_started = models.BooleanField(null=True, blank=True, default=False, verbose_name='Старт бота')
-    day = models.IntegerField(max_length=100, null=False, blank=False, default=1, choices=day_choice,  verbose_name='День по порядку публикации')
+    day = models.IntegerField(null=False, blank=False, default=1, choices=day_choice,
+                              verbose_name='День по порядку публикации')
     id = models.AutoField(primary_key=True, editable=False)
 
     def __str__(self):
@@ -104,9 +108,11 @@ class Bot(models.Model):
         verbose_name = "Бот"
         verbose_name_plural = "Боты"
 
+
 class Post(models.Model):
-    bot = models.ForeignKey(Bot,null=True, blank=True, on_delete=models.CASCADE, verbose_name='Бот')
-    day = models.IntegerField(max_length=100, null=False, blank=False, choices=day_choice,  verbose_name='День по порядку публикации')
+    bot = models.ForeignKey(Bot, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Бот')
+    day = models.IntegerField(null=False, blank=False, choices=day_choice,
+                              verbose_name='День по порядку публикации')
     # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пользователь')
     text = models.TextField(max_length=1000, null=True, blank=True, verbose_name='Текст')
     # post_type = models.CharField(max_length=50, default='Пост', blank=False, choices=POST_TYPE, verbose_name='Тип сообщения')
@@ -125,9 +131,11 @@ class Post(models.Model):
         verbose_name = "Пост"
         verbose_name_plural = "Посты"
 
+
 class Poll(models.Model):
-    bot = models.ForeignKey(Bot,null=True, blank=True, on_delete=models.CASCADE, verbose_name='Бот')
-    day = models.IntegerField(max_length=100, null=False, blank=False, choices=day_choice,  verbose_name='День по порядку публикации')
+    bot = models.ForeignKey(Bot, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Бот')
+    day = models.IntegerField(null=False, blank=False, choices=day_choice,
+                              verbose_name='День по порядку публикации')
     is_sent = models.BooleanField(null=True, blank=True, default=False, verbose_name='Отправлено')
     post_time = models.TimeField(null=True, blank=True, verbose_name='Время публикации')
 
@@ -153,16 +161,19 @@ class Poll(models.Model):
         verbose_name = "Опрос"
         verbose_name_plural = "Опросы"
 
+
 class Chat(models.Model):
-    bot = models.ForeignKey(Bot,null=True, blank=True, on_delete=models.CASCADE, verbose_name='Бот')
+    bot = models.ForeignKey(Bot, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Бот')
     # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пользователь')
-    reference = models.CharField(max_length=200, null=True, unique=True, validators=[validators.validate_contains_https], verbose_name='Ссылка на чат')
+    reference = models.CharField(max_length=200, null=True, unique=True,
+                                 validators=[validators.validate_contains_https], verbose_name='Ссылка на чат')
     title = models.CharField(max_length=300, null=True, blank=True, verbose_name='Название чата')
     # image = models.CharField(max_length=1000, null=True, blank=True, verbose_name='Ссылка на изображение канала')
     image = models.ImageField(max_length=5000, null=True, blank=True, verbose_name='Изображение чата')
     image_url = models.URLField(max_length=5000, blank=True, null=True)
     error = models.CharField(max_length=1000, null=True, blank=True, verbose_name='Ошибки')
-    day = models.IntegerField(max_length=100, null=True, blank=True, default=1, choices=day_choice,  verbose_name='День, с которого начнутся публикации')
+    day = models.IntegerField(null=True, blank=True, default=1, choices=day_choice,
+                              verbose_name='День, с которого начнутся публикации')
     chat_id = models.BigIntegerField(default=0, null=True, blank=True, verbose_name='ID чата')
     id = models.AutoField(primary_key=True, editable=False)
 
@@ -184,6 +195,7 @@ class Chat(models.Model):
     def __str__(self):
         return self.title
 
+
 class UserToMail(models.Model):
     id = models.IntegerField(verbose_name='User ID', primary_key=True)
 
@@ -193,3 +205,22 @@ class UserToMail(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class PostToUser(models.Model):
+    bot = models.ForeignKey(Bot, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Бот')
+    text = models.TextField(max_length=1000, null=True, blank=True, verbose_name='Текст')
+    is_sent = models.BooleanField(null=True, blank=True, default=False, verbose_name='Отправлено')
+    user_amount = models.IntegerField(null=True, blank=True, default=0, verbose_name='Скольким отправлено')
+    media_file = models.FileField(validators=[
+        FileExtensionValidator(allowed_extensions=allowed_extensions),
+        validators.validate_non_ascii], null=True, blank=True, verbose_name='Медиа файл')
+    post_time = models.TimeField(null=True, blank=True, verbose_name='Время публикации')
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        # ordering = ['id']
+        verbose_name = "Пост для рассылки пользователям"
+        verbose_name_plural = "Посты для рассылки пользователям"
