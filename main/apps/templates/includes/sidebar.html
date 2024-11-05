@@ -30,24 +30,28 @@
                         <p>Опросы</p>
                     </a>
                 </li>
+
+                <li class="{% if 'sched' in segment %} active {% endif %}">
+                    <a href="{% url 'sched' %}">
+                        <i class="tim-icons icon-calendar-60"></i>
+                        <p>Отложенная отправка</p>
+                    </a>
+                </li>
+
                 <li class="{% if 'chat' in segment %} active {% endif %}">
                     <a href="/chats">
                         <i class="tim-icons icon-chat-33"></i>
                         <p>Чаты</p>
                     </a>
                 </li>
-{#                <li class="{% if 'bot' in segment %} active {% endif %}">#}
-{#                    <a href="/bot_update/1">#}
-{#                        <i class="tim-icons icon-send"></i>#}
-{#                        <p>Бот</p>#}
-{#                    </a>#}
-{#                </li>#}
+
                 <li class="{% if 'bs' in segment %} active {% endif %}">
                     <a href="/bot_list">
                         <i class="tim-icons icon-send"></i>
                         <p>Мои боты</p>
                     </a>
                 </li>
+
                 <li class="{% if 'user' in segment %} active {% endif %}">
                     <a href="/user_profile/{{ user.id }}">
                         <i class="tim-icons icon-single-02"></i>
@@ -62,22 +66,22 @@
                 </li>
 
                 {% if request.user.is_superuser %}
-<!--                    <li class="dropdown nav-item">-->
-<!--                        <a href="/admin">-->
-<!--                            <i class="tim-icons icon-app"></i>-->
-<!--                            <p>Администратор</p>-->
-<!--                        </a>-->
-<!--                    </li>-->
+                    <!--                    <li class="dropdown nav-item">-->
+                    <!--                        <a href="/admin">-->
+                    <!--                            <i class="tim-icons icon-app"></i>-->
+                    <!--                            <p>Администратор</p>-->
+                    <!--                        </a>-->
+                    <!--                    </li>-->
                 {% endif %}
-                                      <div class="col-2">
-                            <a href="/update_post_is_sent">
-                                <div onclick="return confirm('Остановить Бота и отметить опубликованные посты неотправленными? ' +
+                <div class="col-2">
+                    <a href="/update_post_is_sent">
+                        <div onclick="return confirm('Остановить Бота и отметить опубликованные посты неотправленными? ' +
                      'Бот будет остановлен. Все посты, которые были отправлены, будут помечены как неотправленные')"
-                                     class="btn btn-danger">
-                                    Остановить Бота и пометить сообщения как непрочитанные
-                                </div>
-                            </a>
+                             class="btn btn-danger">
+                            Остановить Бота и пометить сообщения как непрочитанные
                         </div>
+                    </a>
+                </div>
             {% endif %}
         </ul>
     </div>

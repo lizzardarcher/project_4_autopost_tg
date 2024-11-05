@@ -42,7 +42,7 @@
                     <tbody>
                     {% for bot in bots %}
                     <tr>
-                        <td>{{ bot.ref }}</td>
+                        <td><a href="{{ bot.ref }}" target="_blank">{{ bot.ref }}</a></td>
                         <td>{{ bot.token }}</td>
                         <td>{{ bot.title }}</td>
                         <td>{{ bot.start_date }}</td>

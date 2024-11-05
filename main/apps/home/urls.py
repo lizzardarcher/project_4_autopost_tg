@@ -26,6 +26,11 @@ urlpatterns = [
     path('post_update/<int:pk>', views.PostUpdateView.as_view(), name='Post update view'),
     path('post_delete/<int:pk>', views.PostDeleteView.as_view(), name='Post delete view'),
 
+    path('sched', views.PostForScheduleListView.as_view(), name='sched'),
+    path('sched_create', views.PostForScheduleCreateView.as_view(), name='sched_create'),
+    path('sched_update/<int:pk>', views.PostForScheduleUpdateView.as_view(), name='sched_update'),
+    path('sched_delete/<int:pk>', views.PostForScheduleDeleteView.as_view(), name='sched_delete'),
+
     path('polls', views.PollListView.as_view(), name='Poll list view'),
     path('poll_create', views.PollCreateView.as_view(), name='Poll create view'),
     path('poll_update/<int:pk>', views.PollUpdateView.as_view(), name='Poll update view'),

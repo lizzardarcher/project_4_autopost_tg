@@ -1,0 +1,137 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Посты {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+    {% if messages %}
+        <div class="col-md-6">
+            {% for message in messages %}
+                <div class="alert alert-success">
+                    <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="tim-icons icon-simple-remove"></i>
+                    </button>
+                    <span><b> <i class="fa fa-check"></i> {{ message|safe }}</b></span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card">
+                <h3 class="ml-3 mt-3">Посты</h3>
+                <div class="row ml-1">
+                    <div class="col-2">
+                        <a href="/sched_create?page={{ page_obj.number }}">
+                            <div class="btn btn-simple btn-info">++ Добавить</div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="toolbar">
+                        {% if is_paginated %}
+                            <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                    <a class="page-link" href="/posts?page={{ page_obj.previous_page_number }}">
+                                        <i class="tim-icons icon-double-left" aria-hidden="true"></i>
+                                    </a>
+                                {% endif %}
+                                {% for i in paginator.page_range %}
+                                    {% if page_obj.number == i %}
+                                        <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                    <a class="page-link" href="/posts?page={{ page_obj.next_page_number }}">
+                                        <i class="tim-icons icon-double-right" aria-hidden="true"></i>
+                                    </a>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <table id="datatable" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Время отправки</th>
+                            <th>Текст</th>
+                            <th>Медиа файл</th>
+                            <th><a href="/sched?ordering={% if '-is_sent' in request.GET.ordering %}is_sent{% else %}-is_sent{% endif %}"><h6>Отправлен</h6></a></th>
+                            <th>Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for post in posts %}
+                            <tr>
+                                <td><span class="bg-success font-weight-bold p-1 rounded">{{ post.sched_datetime }}</span></td>
+                                <td>{{ post.text }}</td>
+                                <td>
+                                    <div class="">
+                                        {% if 'jpg' in post.media_file|lower or 'jpeg' in post.media_file|lower %}
+                                            <a href="{{ MEDIA_URL }}{{ post.media_file }}">
+                                                <img class="img-thumbnail" width="640px" height="480px" src="
+                                                    {{ MEDIA_URL }}{{ post.media_file }}"></a>
+                                        {% elif 'mp4' in post.media_file|lower or 'mpeg' in post.media_file|lower or 'avi' in post.media_file|lower or 'mkv' in post.media_file|lower %}
+                                            <p>Видео файл:</p>
+                                            <a href="{{ MEDIA_URL }}{{ post.media_file }}">{{ post.media_file }}</a>
+                                        {% elif 'mp3' in post.media_file|lower %}
+                                            <p>Аудио файл:</p>
+                                            <a href="{{ MEDIA_URL }}{{ post.media_file }}">{{ post.media_file }}</a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>{% if post.is_sent %}<span class="badge badge-success">Да</span>{% else %}<span class="badge badge-warning">Нет</span>{% endif %}</td>
+                                <td>
+                                    <a href="/sched_update/{{ post.id }}?page={{ page_obj.number }}"
+                                       class="btn btn-link btn-warning btn-icon btn-sm edit"><i
+                                            class="tim-icons icon-pencil"></i></a>
+                                    <a href="/sched_delete/{{ post.id }}"
+                                       class="btn btn-link btn-danger btn-icon btn-sm remove"><i
+                                            class="tim-icons icon-simple-remove"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                    <!--  PAGINATION BOTTOM -->
+
+                    {% if is_paginated %}
+                        <ul class="pagination">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                <a class="page-link" href="/posts?page={{ page_obj.previous_page_number }}">
+                                    <i class="tim-icons icon-double-left" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+                            {% for i in paginator.page_range %}
+                                {% if page_obj.number == i %}
+                                    <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                <a class="page-link" href="/posts?page={{ page_obj.next_page_number }}">
+                                    <i class="tim-icons icon-double-right" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

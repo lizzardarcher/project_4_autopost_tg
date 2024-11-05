@@ -1,9 +1,5 @@
 from django import forms
-
-# from betterforms.multiform import MultiModelForm
-# from emoji_picker.widgets import EmojiPickerTextInputAdmin, EmojiPickerTextareaAdmin, EmojiPickerTextarea, EmojiPickerTextInput
 from .models import *
-from ..middleware import current_user
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -44,14 +40,11 @@ class BotForm(forms.ModelForm):
             'ref': forms.TextInput(attrs={'class': 'form-control text-info'}),
             'token': forms.TextInput(attrs={'class': 'form-control text-info'}),
             'title': forms.TextInput(attrs={'class': 'form-control text-info'}),
-            # 'start_date': forms.DateTimeInput(attrs={'type': 'date'}),
             'day': forms.Select(attrs={'class': 'form-control text-info'}),
         }
 
 
 class PostForm(forms.ModelForm):
-    # text = forms.CharField(widget=EmojiPickerTextarea),
-
     class Meta:
         model = Post
         fields = [
@@ -61,16 +54,35 @@ class PostForm(forms.ModelForm):
             'media_file',
             'post_time',
             'is_sent',
-            # 'post_type'
         ]
         widgets = {
             'bot': forms.Select(attrs={'class': 'form-control text-info'}),
-
-            # 'post_type': forms.Select(attrs={'class': 'form-control text-info'}),
             'day': forms.Select(attrs={'class': 'form-control text-info'}),
             'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': '...'}),
             'media_file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'post_time': forms.TimeInput(attrs={'class': 'form-control text-info', 'type': 'time'}),
+        }
+
+
+class PostForScheduleForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        fields = [
+            'bot',
+            'text',
+            'media_file',
+            'sched_datetime',
+            'is_for_sched',
+            'is_sent',
+        ]
+        widgets = {
+            'bot': forms.Select(attrs={'class': 'form-control text-info'}),
+            'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': '...'}),
+            'media_file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'sched_datetime': forms.DateTimeInput(attrs={'class': 'form-control text-info', 'type': 'datetime-local'}),
+            'is_for_sched': forms.CheckboxInput(attrs={'checked': ''}),
+            'is_sent': forms.CheckboxInput(attrs={}),
         }
 
 
@@ -96,7 +108,6 @@ class PollForm(forms.ModelForm):
         ]
         widgets = {
             'bot': forms.Select(attrs={'class': 'form-control text-info'}),
-
             'day': forms.Select(attrs={'class': 'form-control text-info'}),
             'post_time': forms.TimeInput(attrs={'class': 'form-control text-info', 'type': 'time'}),
             'question': forms.Textarea(attrs={'class': 'form-control', 'placeholder': '...'}),

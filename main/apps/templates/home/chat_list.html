@@ -55,7 +55,7 @@
                     <tr>
                         <td>{{ chat.id }}</td>
                         <td>{{ chat.title }}</td>
-                        <td>{{ chat.reference }}<br><span class="badge badge-danger">{% if chat.error%}{{chat.error}}
+                        <td><a href="{{ chat.reference }}" target="_blank">{{ chat.reference }}</a><br><span class="badge badge-danger">{% if chat.error%}{{chat.error}}
                             <br>Сообщение об ошибке удалится при добавлении Бота в
                             группу в качестве администратора и после
                             успешной публикации в группу сообщения{% endif %}</span></td>

@@ -111,7 +111,7 @@ class Bot(models.Model):
 
 class Post(models.Model):
     bot = models.ForeignKey(Bot, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Бот')
-    day = models.IntegerField(null=False, blank=False, choices=day_choice,
+    day = models.IntegerField(default=1, null=False, blank=False, choices=day_choice,
                               verbose_name='День по порядку публикации')
     # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пользователь')
     text = models.TextField(max_length=1000, null=True, blank=True, verbose_name='Текст')
@@ -122,6 +122,8 @@ class Post(models.Model):
         validators.validate_non_ascii], null=True, blank=True, verbose_name='Медиа файл')
     post_time = models.TimeField(null=True, blank=True, verbose_name='Время публикации')
     id = models.AutoField(primary_key=True, editable=False)
+    is_for_sched = models.BooleanField(default=False, null=True, blank=True, verbose_name='Для отправки по расписанию')
+    sched_datetime = models.DateTimeField(default=None, null=True, blank=True, verbose_name='Дата и время отложенной отправки')
 
     def __str__(self):
         return str(self.id)

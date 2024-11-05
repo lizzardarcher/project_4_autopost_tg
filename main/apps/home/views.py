@@ -123,7 +123,7 @@ class PostListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = self.model.objects.filter(
-            bot=UserSettings.objects.get(user=self.request.user).bot_selected).order_by('day', 'post_time')
+            bot=UserSettings.objects.get(user=self.request.user).bot_selected, is_for_sched=False).order_by('day', 'post_time')
         return qs
 
 
@@ -142,10 +142,10 @@ class PostListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
 
 
 class PostCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    extra_context = {'segment': 'post'}
     model = Post
     template_name = 'crud/post_create.html'
     form_class = PostForm
-    # success_url = '/posts?page='
     success_message = 'Пост успешно добавлен!'
 
     def get_success_url(self):
@@ -156,10 +156,10 @@ class PostCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
 
 class PostUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    extra_context = {'segment': 'post'}
     model = Post
     template_name = 'crud/post_create.html'
     form_class = PostForm
-    # success_url = '/posts?page='
     success_message = 'Пост успешно обновлён!'
 
     def get_success_url(self):
@@ -170,11 +170,65 @@ class PostUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
 
 
 class PostDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
+    extra_context = {'segment': 'post'}
     model = Post
     success_url = '/posts'
     template_name = 'crud/post_delete.html'
     success_message = 'Пост успешно Удалён!'
 
+# SCHEDULE #####################################################################
+
+class PostForScheduleListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
+    extra_context = {'segment': 'sched'}
+    model = Post
+    paginate_by = 60
+    template_name = 'home/post_for_sched.html'
+    context_object_name = 'posts'
+    success_message = 'Пост успешно создан!'
+
+    def get_queryset(self):
+        qs = self.model.objects.filter(
+            bot=UserSettings.objects.get(user=self.request.user).bot_selected, is_for_sched=True).order_by('sched_datetime')
+        return qs
+
+
+class PostForScheduleCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    extra_context = {'segment': 'sched'}
+    model = Post
+    template_name = 'crud/post_for_sched_create.html'
+    form_class = PostForScheduleForm
+    success_message = 'Пост успешно добавлен!'
+
+    def get_success_url(self):
+        res = '/sched'
+        if 'page' in self.request.GET:
+            res += f"?page={self.request.GET['page']}"
+        return res
+
+
+class PostForScheduleUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    extra_context = {'segment': 'sched'}
+    model = Post
+    template_name = 'crud/post_for_sched_create.html'
+    form_class = PostForScheduleForm
+    success_message = 'Пост успешно обновлён!'
+
+    def get_success_url(self):
+        res = '/sched'
+        if 'page' in self.request.GET:
+            res += f"?page={self.request.GET['page']}"
+        return res
+
+
+class PostForScheduleDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
+    extra_context = {'segment': 'sched'}
+    model = Post
+    success_url = '/sched'
+    template_name = 'crud/post_delete.html'
+    success_message = 'Пост успешно Удалён!'
+
+
+# BOTS #####################################################################
 
 class BotListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
     extra_context = {'segment': 'bs'}
@@ -247,7 +301,8 @@ def index(request):
     context = {
         'segment': 'index',
         'chats': Chat.objects.filter(bot=UserSettings.objects.get(user=request.user).bot_selected),
-        'posts': Post.objects.filter(bot=UserSettings.objects.get(user=request.user).bot_selected),
+        'posts': Post.objects.filter(bot=UserSettings.objects.get(user=request.user).bot_selected, is_for_sched=False),
+        'sched': Post.objects.filter(bot=UserSettings.objects.get(user=request.user).bot_selected, is_for_sched=True),
     }
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))

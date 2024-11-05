@@ -14,8 +14,6 @@ logging.basicConfig(filename='bots.log',
           level=logging.DEBUG,
           format='%(asctime)s - %(levelname)s - %(filename)s - %(lineno)d - %(message)s')
 
-# Перенаправляем вывод в консоль и в файл
-logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 token = DataBase.get_bots()[0][0]
 bots = DataBase.get_bots()
 
@@ -118,7 +116,7 @@ async def run_bot(bot):
             DataBase.update_chat_id((chat_id, chat_title))
         except:
             logger.error(traceback.format_exc())
-    logger.info(f'[Starting bot] [{bot}]')
+
     await bot.infinity_polling(allowed_updates=['message', 'callback_query'])
 
 
