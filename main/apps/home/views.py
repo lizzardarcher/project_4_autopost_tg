@@ -319,7 +319,7 @@ def update_post_is_sent(request):
         model_qs = Post.objects.all()
         # model_bt = Bot.objects.all()
         for obj in model_qs:
-            Post.objects.filter(bot=UserSettings.objects.get(user=request.user).bot_selected).update(is_sent=False)
+            Post.objects.filter(is_for_sched=False, bot=UserSettings.objects.get(user=request.user).bot_selected).update(is_sent=False)
             Chat.objects.filter(bot=UserSettings.objects.get(user=request.user).bot_selected).update(day=1)
             Bot.objects.filter(id=UserSettings.objects.get(user=request.user).bot_selected.id).update(is_started=False)
     # html_template = loader.get_template('home/post_list.html')
