@@ -188,7 +188,7 @@ class PostForScheduleListView(SuccessMessageMixin, LoginRequiredMixin, ListView)
 
     def get_queryset(self):
         qs = self.model.objects.filter(
-            bot=UserSettings.objects.get(user=self.request.user).bot_selected, is_for_sched=True).order_by('sched_datetime')
+            bot=UserSettings.objects.get(user=self.request.user).bot_selected, is_for_sched=True).order_by('is_sent', 'sched_datetime' )
         return qs
 
 

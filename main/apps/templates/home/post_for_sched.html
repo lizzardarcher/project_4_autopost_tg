@@ -21,11 +21,11 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <div class="card">
-                <h3 class="ml-3 mt-3">Посты</h3>
+                <h1 class="ml-3 mt-3">Посты для отправки по расписанию</h1>
                 <div class="row ml-1">
                     <div class="col-2">
                         <a href="/sched_create?page={{ page_obj.number }}">
-                            <div class="btn btn-simple btn-info">++ Добавить</div>
+                            <div class="btn btn-simple btn-info">+ Добавить в расписание</div>
                         </a>
                     </div>
 
@@ -69,7 +69,7 @@
                         <tbody>
                         {% for post in posts %}
                             <tr>
-                                <td><span class="bg-success font-weight-bold p-1 rounded">{{ post.sched_datetime }}</span></td>
+                                <td><span class="bg-success font-weight-bold rounded">{{ post.sched_datetime|date:"d-m-Y H:i" }}</span></td>
                                 <td>{{ post.text }}</td>
                                 <td>
                                     <div class="">
