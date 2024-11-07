@@ -93,15 +93,13 @@ class UserSettings(models.Model):
 
 
 class Bot(models.Model):
-    ref = models.CharField(max_length=100, verbose_name='Ссылка на бота',
-                           validators=[validators.validate_bot_ref_https])
+    ref = models.CharField(max_length=100, verbose_name='Ссылка на бота', validators=[validators.validate_bot_ref_https])
     token = models.CharField(max_length=300, verbose_name='Бот Токен')
     title = models.CharField(max_length=300, null=True, blank=True, verbose_name='Назавание бота')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     start_date = models.DateField(null=True, blank=True, verbose_name='Начало работы Бота')
     is_started = models.BooleanField(null=True, blank=True, default=False, verbose_name='Старт бота')
-    day = models.IntegerField(null=False, blank=False, default=1, choices=day_choice,
-                              verbose_name='День по порядку публикации')
+    day = models.IntegerField(null=False, blank=False, default=1, choices=day_choice, verbose_name='День по порядку публикации')
     id = models.AutoField(primary_key=True, editable=False)
 
     def __str__(self):

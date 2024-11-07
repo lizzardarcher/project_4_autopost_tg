@@ -1,6 +1,6 @@
 from django import forms
 from .models import *
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, get_user
 
 User = get_user_model()
 
@@ -40,6 +40,7 @@ class BotForm(forms.ModelForm):
             'ref': forms.TextInput(attrs={'class': 'form-control text-info'}),
             'token': forms.TextInput(attrs={'class': 'form-control text-info'}),
             'title': forms.TextInput(attrs={'class': 'form-control text-info'}),
+            'start_date': forms.DateTimeInput(format='%Y-%m-%d', attrs={'class': 'form-control text-info', 'type': 'date'}),
             'day': forms.Select(attrs={'class': 'form-control text-info'}),
         }
 
@@ -63,6 +64,12 @@ class PostForm(forms.ModelForm):
             'post_time': forms.TimeInput(attrs={'class': 'form-control text-info', 'type': 'time'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super(PostForm, self).__init__(*args, **kwargs)
+        bot_selected = UserSettings.objects.get(user=User.objects.first()).bot_selected
+        bot_set = Bot.objects.filter(id=bot_selected.id)
+        self.fields['bot'].queryset = bot_set
+
 
 class PostForScheduleForm(forms.ModelForm):
 
@@ -80,11 +87,16 @@ class PostForScheduleForm(forms.ModelForm):
             'bot': forms.Select(attrs={'class': 'form-control text-info'}),
             'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': '...'}),
             'media_file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'sched_datetime': forms.DateTimeInput(attrs={'class': 'form-control text-info', 'type': 'datetime-local'}),
+            'sched_datetime': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'class': 'form-control text-info', 'type': 'datetime-local'}),
             'is_for_sched': forms.CheckboxInput(attrs={'checked': ''}),
             'is_sent': forms.CheckboxInput(attrs={}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super(PostForScheduleForm, self).__init__(*args, **kwargs)
+        bot_selected = UserSettings.objects.get(user=User.objects.first()).bot_selected
+        bot_set = Bot.objects.filter(id=bot_selected.id)
+        self.fields['bot'].queryset = bot_set
 
 class PollForm(forms.ModelForm):
     class Meta:
