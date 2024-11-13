@@ -64,10 +64,10 @@ def post():
 
 
 if __name__ == '__main__':
-    try:
-        while True:
+    while True:
+        try:
             post()
             sleep(5)
-    except KeyboardInterrupt:
-        print('Post Failed')
-        print(KeyboardInterrupt)
+        except KeyboardInterrupt:
+            print('Post Exit')
+            print(KeyboardInterrupt)

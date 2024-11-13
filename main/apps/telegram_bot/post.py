@@ -29,6 +29,7 @@ def post():
         post_bot_day = b.day  # день постинга у бота
 
         if is_start_date_bot and is_bot_active:
+            # print(f"[BOT IS ACTIVE] [{b.title}]")
             chats = Chat.objects.filter(bot=b) # Все чаты
 
             # Посты. Неотправленные и у которых день постинга совпадает с днём у бота
@@ -154,17 +155,15 @@ def post():
 
             # messages = DataBase.get_posts((False, post_bot_day))
 
-            messages = Post.objects.filter(is_sent=False, day=post_bot_day)
-
+            messages = Post.objects.filter(is_sent=False, day=post_bot_day, bot=b)
             # polls = DataBase.get_posts((False, post_bot_day))
 
-            polls = Post.objects.filter(is_sent=False, day=post_bot_day)
+            polls = Post.objects.filter(is_sent=False, day=post_bot_day, bot=b)
 
-            # print(messages, polls)
+            # print(b.title, messages, polls)
 
             if not messages and not polls:
-                new_start_date_bot = str(datetime.strptime(start_date_bot, '%Y-%m-%d')
-                                         + timedelta(days=1)).split(' ')[0]
+                new_start_date_bot = start_date_bot + timedelta(days=1)
                 new_post_bot_day = post_bot_day + 1
 
                 #  Обновляем день у бота +1
@@ -172,19 +171,19 @@ def post():
                 b.day = new_post_bot_day
                 b.start_date = new_start_date_bot
                 b.save()
-
+                print('Updating bot days')
                 # DataBase.update_bot_day((new_start_date_bot, new_post_bot_day, bot_id))
                 #  Обновляем день у чатов, у которых день такой же как у бота +1
                 # DataBase.update_chat_day_all((new_post_bot_day, post_bot_day))
 
 # post()
 if __name__ == '__main__':
-    try:
-        while True:
+    while True:
+        try:
             # print('[PENDING] [...]')
             post()
             sleep(5)
             # sys.exit(1)
-    except KeyboardInterrupt:
-        print('Post Exit')
-        print(KeyboardInterrupt)
+        except KeyboardInterrupt:
+            print('Post Exit')
+            print(KeyboardInterrupt)
