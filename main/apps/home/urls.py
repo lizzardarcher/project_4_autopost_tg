@@ -40,6 +40,7 @@ urlpatterns = [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     path('change_bot_selected/<int:id>', views.change_bot_selected, name='Change bot selected'),
 
+    path('notify_id', views.UserToMailListView.as_view(), name='notify_id'),
 ]
 
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,9 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<h1>Список ID рассылки уведомлений</h1>
+    <ul>
+      {% for user in usertomail_list %}
+        <li>{{ user.id }}</li>
+      {% endfor %}
+    </ul>
+{% endblock content %}

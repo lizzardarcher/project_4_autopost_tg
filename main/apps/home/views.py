@@ -61,6 +61,11 @@ class UserSettingsUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView
         return super().form_valid(form)
 
 
+class UserToMailListView(SuccessMessageMixin, ListView):
+    model = UserToMail
+    template_name = 'home/usertomail_list.html'
+    context_object_name = 'usertomail_list'
+
 # CHATS #####################################################################
 
 class ChatListView(SuccessMessageMixin, LoginRequiredMixin, ListView):

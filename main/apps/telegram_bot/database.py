@@ -7,8 +7,6 @@ from config import DATA_BASE
 class DataBase:
     db = DATA_BASE
 
-    # ToDo SETTERS ################################################################
-
     @staticmethod
     def set() -> None:
         try:
@@ -80,8 +78,6 @@ class DataBase:
         except sql.Error as error:
             print(error, traceback.format_exc())
 
-    # ToDo GETTERS ################################################################
-
     @staticmethod
     def get() -> list:
         data = []
@@ -123,7 +119,6 @@ class DataBase:
             print(traceback.format_exc())
         # print(data)
         return data
-
 
     @staticmethod
     def get_polls(val) -> list:
@@ -230,7 +225,6 @@ class DataBase:
         # print(data)
         return data
 
-
     @staticmethod
     def get_chats_for_post() -> list:
         data = []
@@ -261,8 +255,6 @@ class DataBase:
         # print(data)
         return data
 
-
-
     @staticmethod
     def get_tz() -> int:
         data = []
@@ -288,8 +280,6 @@ class DataBase:
         except sql.Error as error:
             print(error, traceback.format_exc())
         return data
-
-    # ToDo UPDATE ################################################################
 
     @staticmethod
     def update(data: str) -> None:
@@ -382,8 +372,6 @@ class DataBase:
             con.close()
         except sql.Error as error:
             print(error, traceback.format_exc())
-
-    # ToDo DELETE ################################################################
 
     @staticmethod
     def delete():

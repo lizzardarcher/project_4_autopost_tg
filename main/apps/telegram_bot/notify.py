@@ -80,19 +80,20 @@ async def run_bot(bot):
         if call.message.chat.type == 'private':
             await bot.delete_message(call.message.chat.id, call.message.id)
             if 'accept' in call.data:
-                user_id = call.message.from_user.id
+                user_id = call.message.chat.id
                 DataBase.set_user_to_mail(int(user_id))
                 print('User set: ', user_id)
                 await bot.send_message(call.message.chat.id, 'Подписка на уведомления активирована ✅')
                 await bot.send_message(call.message.chat.id,
                                        'Если хотите изменить подписку, запустите бота заново с помощью команды /start')
             if 'decline' in call.data:
-                user_id = call.message.from_user.id
+                user_id = call.message.chat.id
                 DataBase.delete_user_to_mail(int(user_id))
                 print('User deleted: ', user_id)
                 await bot.send_message(call.message.chat.id, 'Подписка на уведомления отклонена 🚫')
                 await bot.send_message(call.message.chat.id,
                                        'Если хотите изменить подписку, запустите бота заново с помощью команды /start')
+
 
     # @bot.message_handler(content_types=['new_chat_members'])
     # async def welcome_new_member(message):
