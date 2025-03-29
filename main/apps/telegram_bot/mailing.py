@@ -8,23 +8,21 @@ from utils import djangoORM
 from apps.home.models import MessageToSend, Bot, UserToMail
 
 WEEKDAYS = {
-    'mon': 0,
-    'tue': 1,
-    'wed': 2,
-    'thu': 3,
-    'fri': 4,
-    'sat': 5,
-    'sun': 6,
+    'mon': 6,
+    'tue': 0,
+    'wed': 1,
+    'thu': 2,
+    'fri': 3,
+    'sat': 4,
+    'sun': 5,
 }
 
 def post():
     bots = Bot.objects.all()
     message = MessageToSend.objects.get(id=1)
     users = UserToMail.objects.all()
-
     weekday = datetime.now().weekday()
     current_time = datetime.now().strftime('%H:%M')
-
     for bot in bots:
         bot = TeleBot(bot.token)
         if weekday == WEEKDAYS[message.day_to_send_1_first] or weekday == WEEKDAYS[message.day_to_send_1_second]:
@@ -53,3 +51,6 @@ while True:
     except KeyboardInterrupt:
         print('Post Exit')
         print(KeyboardInterrupt)
+
+# for i in range(5):
+#     post()
