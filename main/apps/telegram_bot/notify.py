@@ -9,6 +9,9 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from database import DataBase
 from threading import Thread
 
+from utils import djangoORM
+from apps.home.models import MessageToSend, Bot, UserToMail
+
 logging.basicConfig(filename='bots.log',
           filemode='w',
           level=logging.DEBUG,
@@ -81,15 +84,24 @@ async def run_bot(bot):
             await bot.delete_message(call.message.chat.id, call.message.id)
             if 'accept' in call.data:
                 user_id = call.message.chat.id
-                DataBase.set_user_to_mail(int(user_id))
-                print('User set: ', user_id)
+                username = call.message.chat.username
+                first_name = call.message.chat.first_name
+                last_name = call.message.chat.last_name
+                try:
+                    UserToMail.objects.get(id=user_id).delete()
+                    UserToMail.objects.create(id=user_id, username=username or '---',
+                                              first_name=first_name or '---', last_name=last_name or '---')
+                except:
+                    print(traceback.format_exc())
                 await bot.send_message(call.message.chat.id, 'Подписка на уведомления активирована ✅')
                 await bot.send_message(call.message.chat.id,
                                        'Если хотите изменить подписку, запустите бота заново с помощью команды /start')
             if 'decline' in call.data:
                 user_id = call.message.chat.id
-                DataBase.delete_user_to_mail(int(user_id))
-                print('User deleted: ', user_id)
+                try:
+                    UserToMail.objects.get(id=user_id).delete()
+                except:
+                    print(traceback.format_exc())
                 await bot.send_message(call.message.chat.id, 'Подписка на уведомления отклонена 🚫')
                 await bot.send_message(call.message.chat.id,
                                        'Если хотите изменить подписку, запустите бота заново с помощью команды /start')

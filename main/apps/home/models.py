@@ -205,9 +205,9 @@ class Chat(models.Model):
 
 class UserToMail(models.Model):
     id = models.IntegerField(verbose_name='User ID', primary_key=True)
-    username = models.CharField(max_length=100, default='', verbose_name='Username')
-    first_name = models.CharField(max_length=100, default='', verbose_name='First name')
-    last_name = models.CharField(max_length=100, default='', verbose_name='Last name')
+    username = models.CharField(max_length=100, default='', blank=True, verbose_name='Username')
+    first_name = models.CharField(max_length=100, default='', blank=True, verbose_name='First name')
+    last_name = models.CharField(max_length=100, default='', blank=True, verbose_name='Last name')
 
     class Meta:
         verbose_name = 'Пользователь для рассылки'

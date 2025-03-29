@@ -1,10 +1,8 @@
 import traceback
-from datetime import datetime, timedelta, time
+from datetime import datetime
 from time import sleep
 import sys
 from telebot import TeleBot
-
-from database import DataBase
 
 from utils import djangoORM
 from apps.home.models import MessageToSend, Bot, UserToMail
