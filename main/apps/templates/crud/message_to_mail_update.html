@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+    <body class="bg-light bg-gradient">
+    <div class="card col-4">
+        <a href="{% url 'notify' %}"><h3>Назад</h3></a>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <br/>
+            <button type="submit" class="btn btn-success">Подтвердить</button>
+        </form>
+    </div>
+    </body>
+{% endblock %}

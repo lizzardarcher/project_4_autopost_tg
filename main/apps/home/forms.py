@@ -26,7 +26,7 @@ class ChatForm(forms.ModelForm):
             'title',
         ]
         widgets = {
-            'bot':forms.Select(attrs={'class': 'form-control text-info'}),
+            'bot': forms.Select(attrs={'class': 'form-control text-info'}),
             'reference': forms.TextInput(attrs={'class': 'form-control text-info'}),
             'title': forms.TextInput(attrs={'class': 'form-control text-info'}),
         }
@@ -40,7 +40,8 @@ class BotForm(forms.ModelForm):
             'ref': forms.TextInput(attrs={'class': 'form-control text-info'}),
             'token': forms.TextInput(attrs={'class': 'form-control text-info'}),
             'title': forms.TextInput(attrs={'class': 'form-control text-info'}),
-            'start_date': forms.DateTimeInput(format='%Y-%m-%d', attrs={'class': 'form-control text-info', 'type': 'date'}),
+            'start_date': forms.DateTimeInput(format='%Y-%m-%d',
+                                              attrs={'class': 'form-control text-info', 'type': 'date'}),
             'day': forms.Select(attrs={'class': 'form-control text-info'}),
         }
 
@@ -72,7 +73,6 @@ class PostForm(forms.ModelForm):
 
 
 class PostForScheduleForm(forms.ModelForm):
-
     class Meta:
         model = Post
         fields = [
@@ -87,7 +87,8 @@ class PostForScheduleForm(forms.ModelForm):
             'bot': forms.Select(attrs={'class': 'form-control text-info'}),
             'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': '...'}),
             'media_file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'sched_datetime': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'class': 'form-control text-info', 'type': 'datetime-local'}),
+            'sched_datetime': forms.DateTimeInput(format='%Y-%m-%dT%H:%M',
+                                                  attrs={'class': 'form-control text-info', 'type': 'datetime-local'}),
             'is_for_sched': forms.CheckboxInput(attrs={'checked': ''}),
             'is_sent': forms.CheckboxInput(attrs={}),
         }
@@ -97,6 +98,7 @@ class PostForScheduleForm(forms.ModelForm):
         bot_selected = UserSettings.objects.get(user=User.objects.first()).bot_selected
         bot_set = Bot.objects.filter(id=bot_selected.id)
         self.fields['bot'].queryset = bot_set
+
 
 class PollForm(forms.ModelForm):
     class Meta:
@@ -139,3 +141,19 @@ class PollForm(forms.ModelForm):
 class PostToUserForm(forms.ModelForm):
     fields = '__all__'
 
+
+class MessageToSendForm(forms.ModelForm):
+    class Meta:
+        model = MessageToSend
+        fields = ['message_1', 'day_to_send_1_first','day_to_send_1_second', 'time_to_send_1',
+                  'message_2', 'day_to_send_2_first','day_to_send_2_second', 'time_to_send_2']
+        widgets = {
+            'message_1': forms.Textarea(attrs={'class': 'form-text text-dark', 'placeholder': '...',}),
+            'message_2': forms.Textarea(attrs={'class': 'form-text text-dark', 'placeholder': '...',}),
+            'day_to_send_1_first': forms.Select(attrs={'class': 'form-control text-info'}),
+            'day_to_send_1_second': forms.Select(attrs={'class': 'form-control text-info'}),
+            'day_to_send_2_first': forms.Select(attrs={'class': 'form-control text-info'}),
+            'day_to_send_2_second': forms.Select(attrs={'class': 'form-control text-info'}),
+            'time_to_send_1': forms.TimeInput(attrs={'class': 'form-control text-info', 'type': 'time'}),
+            'time_to_send_2': forms.TimeInput(attrs={'class': 'form-control text-info', 'type': 'time'}),
+        }

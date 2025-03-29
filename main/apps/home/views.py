@@ -65,6 +65,24 @@ class UserToMailListView(SuccessMessageMixin, ListView):
     model = UserToMail
     template_name = 'home/usertomail_list.html'
     context_object_name = 'usertomail_list'
+    paginate_by = 100
+
+    def get_context_data(self, **kwargs):
+        context = super(UserToMailListView, self).get_context_data(**kwargs)
+        context.update({
+            'segment': 'notify',
+        })
+        context['message_to_send'] = MessageToSend.objects.get(id=1)
+        return context
+
+
+class MessageToMailUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    model = MessageToSend
+    template_name = 'crud/message_to_mail_update.html'
+    form_class = MessageToSendForm
+    success_message = 'Обновлено успешно!'
+    def get_success_url(self):
+        return reverse('notify')
 
 # CHATS #####################################################################
 
@@ -339,3 +357,5 @@ def ves_v_norme_redirect(request):
 def change_bot_selected(request, id):
     UserSettings.objects.filter(user=request.user).update(bot_selected=Bot.objects.get(id=id))
     return redirect("/bot")
+
+

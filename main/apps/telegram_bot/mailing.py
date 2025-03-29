@@ -6,46 +6,46 @@ from telebot import TeleBot
 
 from database import DataBase
 
-text_1 = '''
-Добрый вечер !!!
-Надеемся что мы вместе продвигаемся к твоей цели.
-🙌🙌🙌🙌🙌💪💪💪💪💪💪
+from utils import djangoORM
+from apps.home.models import MessageToSend, Bot, UserToMail
 
-Завтра утром ждём фото веса!👌
-'''
-
-text_2 = '''
-Доброе утро!!!🙂😍😜
-Сегодня контрольное взвешивание.
-
-Пришлите в группу марафона фото  веса
-'''
+WEEKDAYS = {
+    'mon': 0,
+    'tue': 1,
+    'wed': 2,
+    'thu': 3,
+    'fri': 4,
+    'sat': 5,
+    'sun': 6,
+}
 
 def post():
-    bots = DataBase.get_bots()
-    weekday = (datetime.now() + timedelta(days=0)).weekday()
-    current_time = str(datetime.now().hour) + ':' + str(datetime.now().minute)
-    for b in bots:
-        bot = TeleBot(b[0])
-        print(weekday, current_time)
-        if weekday == 0 or weekday == 3:  # 0 & 3
-            if current_time == '20:0':
-                user_ids = DataBase.get_user_to_mail()
-                for user_id in user_ids:
+    bots = Bot.objects.all()
+    message = MessageToSend.objects.get(id=1)
+    users = UserToMail.objects.all()
+
+    weekday = datetime.now().weekday()
+    current_time = datetime.now().strftime('%H:%M')
+
+    for bot in bots:
+        bot = TeleBot(bot.token)
+        if weekday == WEEKDAYS[message.day_to_send_1_first] or weekday == WEEKDAYS[message.day_to_send_1_second]:
+            if current_time == message.time_to_send_1.strftime('%H:%M'):
+                for user in users:
                     try:
-                        bot.send_message(chat_id=user_id[0], text=text_1)
+                        bot.send_message(chat_id=user.id, text=message.message_1)
                     except:
                         print(traceback.format_exc())
-                sleep(60/len(bots))
-        elif weekday == 1 or weekday == 4:  # 1 & 4
-            if current_time == '7:0':
-                user_ids = DataBase.get_user_to_mail()
-                for user_id in user_ids:
+                sleep(60/len(bots) - 1)
+
+        if weekday == WEEKDAYS[message.day_to_send_2_first] or weekday == WEEKDAYS[message.day_to_send_2_second]:
+            if current_time == message.time_to_send_2.strftime('%H:%M'):
+                for user in users:
                     try:
-                        bot.send_message(chat_id=user_id[0], text=text_2)
+                        bot.send_message(chat_id=user.id, text=message.message_2)
                     except:
                         print(traceback.format_exc())
-                sleep(60/len(bots))
+                sleep(60/len(bots) - 1)
 
 while True:
     try:
@@ -53,8 +53,5 @@ while True:
         sleep(1)
         sys.exit()
     except KeyboardInterrupt:
-        ...
-        # print(traceback.format_exc())
-# for i in range(15):
-#     post()
-#     sleep(1)
+        print('Post Exit')
+        print(KeyboardInterrupt)

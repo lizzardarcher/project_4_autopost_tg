@@ -93,13 +93,15 @@ class UserSettings(models.Model):
 
 
 class Bot(models.Model):
-    ref = models.CharField(max_length=100, verbose_name='Ссылка на бота', validators=[validators.validate_bot_ref_https])
+    ref = models.CharField(max_length=100, verbose_name='Ссылка на бота',
+                           validators=[validators.validate_bot_ref_https])
     token = models.CharField(max_length=300, verbose_name='Бот Токен')
     title = models.CharField(max_length=300, null=True, blank=True, verbose_name='Назавание бота')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     start_date = models.DateField(null=True, blank=True, verbose_name='Начало работы Бота')
     is_started = models.BooleanField(null=True, blank=True, default=False, verbose_name='Старт бота')
-    day = models.IntegerField(null=False, blank=False, default=1, choices=day_choice, verbose_name='День по порядку публикации')
+    day = models.IntegerField(null=False, blank=False, default=1, choices=day_choice,
+                              verbose_name='День по порядку публикации')
     id = models.AutoField(primary_key=True, editable=False)
 
     def __str__(self):
@@ -203,6 +205,9 @@ class Chat(models.Model):
 
 class UserToMail(models.Model):
     id = models.IntegerField(verbose_name='User ID', primary_key=True)
+    username = models.CharField(max_length=100, default='', verbose_name='Username')
+    first_name = models.CharField(max_length=100, default='', verbose_name='First name')
+    last_name = models.CharField(max_length=100, default='', verbose_name='Last name')
 
     class Meta:
         verbose_name = 'Пользователь для рассылки'
@@ -210,6 +215,48 @@ class UserToMail(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class MessageToSend(models.Model):
+    """
+    Модель для хранения сообщений, которые нужно отправить в определенные дни и время.
+    """
+    MONDAY = 'mon'
+    TUESDAY = 'tue'
+    WEDNESDAY = 'wed'
+    THURSDAY = 'thu'
+    FRIDAY = 'fri'
+    SATURDAY = 'sat'
+    SUNDAY = 'sun'
+
+    DAY_CHOICES = [
+        (MONDAY, 'Понедельник'),
+        (TUESDAY, 'Вторник'),
+        (WEDNESDAY, 'Среда'),
+        (THURSDAY, 'Четверг'),
+        (FRIDAY, 'Пятница'),
+        (SATURDAY, 'Суббота'),
+        (SUNDAY, 'Воскресенье'),
+    ]
+
+    message_1 = models.TextField(verbose_name="Сообщение 1")
+    day_to_send_1_first = models.CharField(max_length=3, choices=DAY_CHOICES, verbose_name="День отправки сообщения 1")
+    day_to_send_1_second = models.CharField(max_length=3, choices=DAY_CHOICES, verbose_name="День отправки сообщения 1")
+    time_to_send_1 = models.TimeField(verbose_name="Время отправки сообщения 1")
+
+    message_2 = models.TextField(verbose_name="Сообщение 2")
+    day_to_send_2_first = models.CharField(max_length=3,choices=DAY_CHOICES,verbose_name="День отправки сообщения 2")
+    day_to_send_2_second = models.CharField(max_length=3,choices=DAY_CHOICES,verbose_name="День отправки сообщения 2")
+    time_to_send_2 = models.TimeField(verbose_name="Время отправки сообщения 2")
+
+
+    def __str__(self):
+        return f"Сообщения: {self.message_1[:20]}..., {self.message_2[:20]}..."
+
+    class Meta:
+        verbose_name = "Сообщение для отправки"
+        verbose_name_plural = "Сообщения для отправки"
+
 
 
 class PostToUser(models.Model):

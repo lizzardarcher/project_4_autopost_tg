@@ -34,6 +34,13 @@
                     </a>
                 </li>
 
+                <li class="{% if 'notify' in segment %} active {% endif %}">
+                    <a href="{% url 'notify' %}">
+                        <i class="tim-icons icon-send"></i>
+                        <p>Оповещения</p>
+                    </a>
+                </li>
+
                 <li class="{% if 'chat' in segment %} active {% endif %}">
                     <a href="/chats">
                         <i class="tim-icons icon-chat-33"></i>
