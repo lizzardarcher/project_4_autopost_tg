@@ -11,8 +11,8 @@ CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'S#perS3crEt_1122'
 # SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_1122')
 
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 # DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = ['ves-norma.ru', '82.147.71.168']

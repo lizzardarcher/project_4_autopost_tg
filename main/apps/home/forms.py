@@ -145,15 +145,33 @@ class PostToUserForm(forms.ModelForm):
 class MessageToSendForm(forms.ModelForm):
     class Meta:
         model = MessageToSend
-        fields = ['message_1', 'day_to_send_1_first','day_to_send_1_second', 'time_to_send_1',
-                  'message_2', 'day_to_send_2_first','day_to_send_2_second', 'time_to_send_2']
+        fields = ['message_1', 'day_to_send_1_first', 'day_to_send_1_second', 'time_to_send_1',
+                  'message_2', 'day_to_send_2_first', 'day_to_send_2_second', 'time_to_send_2']
         widgets = {
-            'message_1': forms.Textarea(attrs={'class': 'form-text text-dark', 'placeholder': '...',}),
-            'message_2': forms.Textarea(attrs={'class': 'form-text text-dark', 'placeholder': '...',}),
+            'message_1': forms.Textarea(attrs={'class': 'form-text text-dark', 'placeholder': '...', }),
+            'message_2': forms.Textarea(attrs={'class': 'form-text text-dark', 'placeholder': '...', }),
             'day_to_send_1_first': forms.Select(attrs={'class': 'form-control text-info'}),
             'day_to_send_1_second': forms.Select(attrs={'class': 'form-control text-info'}),
             'day_to_send_2_first': forms.Select(attrs={'class': 'form-control text-info'}),
             'day_to_send_2_second': forms.Select(attrs={'class': 'form-control text-info'}),
             'time_to_send_1': forms.TimeInput(attrs={'class': 'form-control text-info', 'type': 'time'}),
             'time_to_send_2': forms.TimeInput(attrs={'class': 'form-control text-info', 'type': 'time'}),
+        }
+
+
+class MessageToNotifyForm(forms.ModelForm):
+    class Meta:
+        model = MessageToNotify
+        fields = ['message', 'day_to_send_1', 'day_to_send_2', 'day_to_send_3', 'day_to_send_4', 'day_to_send_5',
+                  'day_to_send_6', 'day_to_send_7', 'time_to_send']
+        widgets = {
+            'message': forms.Textarea(attrs={'class': 'form-text text-dark', 'placeholder': '...', }),
+            'day_to_send_1': forms.Select(attrs={'class': 'form-control text-info'}),
+            'day_to_send_2': forms.Select(attrs={'class': 'form-control text-info'}),
+            'day_to_send_3': forms.Select(attrs={'class': 'form-control text-info'}),
+            'day_to_send_4': forms.Select(attrs={'class': 'form-control text-info'}),
+            'day_to_send_5': forms.Select(attrs={'class': 'form-control text-info'}),
+            'day_to_send_6': forms.Select(attrs={'class': 'form-control text-info'}),
+            'day_to_send_7': forms.Select(attrs={'class': 'form-control text-info'}),
+            'time_to_send': forms.TimeInput(attrs={'class': 'form-control text-info', 'type': 'time'}),
         }

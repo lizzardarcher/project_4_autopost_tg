@@ -216,7 +216,7 @@ class UserToMail(models.Model):
     def __str__(self):
         return str(self.id)
 
-
+# DEPRECATED
 class MessageToSend(models.Model):
     """
     Модель для хранения сообщений, которые нужно отправить в определенные дни и время.
@@ -257,6 +257,44 @@ class MessageToSend(models.Model):
         verbose_name = "Сообщение для отправки"
         verbose_name_plural = "Сообщения для отправки"
 
+class MessageToNotify(models.Model):
+    """
+    Модель для хранения сообщений, которые нужно отправить в определенные дни и время.
+    """
+    MONDAY = 'Понедельник'
+    TUESDAY = 'Вторник'
+    WEDNESDAY = 'Среда'
+    THURSDAY = 'Четверг'
+    FRIDAY = 'Пятница'
+    SATURDAY = 'Суббота'
+    SUNDAY = 'Воскресенье'
+
+    DAY_CHOICES = [
+        (MONDAY, 'Понедельник'),
+        (TUESDAY, 'Вторник'),
+        (WEDNESDAY, 'Среда'),
+        (THURSDAY, 'Четверг'),
+        (FRIDAY, 'Пятница'),
+        (SATURDAY, 'Суббота'),
+        (SUNDAY, 'Воскресенье'),
+    ]
+
+    message = models.TextField(verbose_name="Сообщение")
+    day_to_send_1 = models.CharField(max_length=15, choices=DAY_CHOICES, verbose_name="День отправки сообщения 1")
+    day_to_send_2 = models.CharField(max_length=15, choices=DAY_CHOICES, null=True, blank=True, verbose_name="День отправки сообщения 2")
+    day_to_send_3 = models.CharField(max_length=15, choices=DAY_CHOICES, null=True, blank=True, verbose_name="День отправки сообщения 3")
+    day_to_send_4 = models.CharField(max_length=15, choices=DAY_CHOICES, null=True, blank=True, verbose_name="День отправки сообщения 4")
+    day_to_send_5 = models.CharField(max_length=15, choices=DAY_CHOICES, null=True, blank=True, verbose_name="День отправки сообщения 5")
+    day_to_send_6 = models.CharField(max_length=15, choices=DAY_CHOICES, null=True, blank=True, verbose_name="День отправки сообщения 6")
+    day_to_send_7 = models.CharField(max_length=15, choices=DAY_CHOICES, null=True, blank=True, verbose_name="День отправки сообщения 7")
+    time_to_send = models.TimeField(verbose_name="Время отправки сообщения")
+
+    def __str__(self):
+        return f"Сообщение: {self.message[:20]}..."
+
+    class Meta:
+        verbose_name = "Сообщение для отправки"
+        verbose_name_plural = "Сообщения для отправки"
 
 
 class PostToUser(models.Model):

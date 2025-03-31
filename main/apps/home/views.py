@@ -72,17 +72,35 @@ class UserToMailListView(SuccessMessageMixin, ListView):
         context.update({
             'segment': 'notify',
         })
-        context['message_to_send'] = MessageToSend.objects.get(id=1)
+        context['messages_to_notify'] = MessageToNotify.objects.all()
         return context
 
 
-class MessageToMailUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
-    model = MessageToSend
+class MessageToNotifyCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    model = MessageToNotify
     template_name = 'crud/message_to_mail_update.html'
-    form_class = MessageToSendForm
-    success_message = 'Обновлено успешно!'
+    form_class = MessageToNotifyForm
+    success_message = 'Добавлено успешно!'
+
     def get_success_url(self):
         return reverse('notify')
+
+
+class MessageToNotifyUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    model = MessageToNotify
+    template_name = 'crud/message_to_mail_update.html'
+    form_class = MessageToNotifyForm
+    success_message = 'Обновлено успешно!'
+
+    def get_success_url(self):
+        return reverse('notify')
+
+
+def message_to_notify_delete(request, pk):
+    MessageToNotify.objects.filter(id=pk).delete()
+    messages.success(request, 'Удалено успешно!')
+    return HttpResponseRedirect(reverse('notify'))
+
 
 # CHATS #####################################################################
 
@@ -146,7 +164,8 @@ class PostListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = self.model.objects.filter(
-            bot=UserSettings.objects.get(user=self.request.user).bot_selected, is_for_sched=False).order_by('day', 'post_time')
+            bot=UserSettings.objects.get(user=self.request.user).bot_selected, is_for_sched=False).order_by('day',
+                                                                                                            'post_time')
         return qs
 
 
@@ -199,6 +218,7 @@ class PostDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
     template_name = 'crud/post_delete.html'
     success_message = 'Пост успешно Удалён!'
 
+
 # SCHEDULE #####################################################################
 
 class PostForScheduleListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
@@ -211,7 +231,8 @@ class PostForScheduleListView(SuccessMessageMixin, LoginRequiredMixin, ListView)
 
     def get_queryset(self):
         qs = self.model.objects.filter(
-            bot=UserSettings.objects.get(user=self.request.user).bot_selected, is_for_sched=True).order_by('is_sent', 'sched_datetime' )
+            bot=UserSettings.objects.get(user=self.request.user).bot_selected, is_for_sched=True).order_by('is_sent',
+                                                                                                           'sched_datetime')
         return qs
 
 
@@ -342,7 +363,8 @@ def update_post_is_sent(request):
         model_qs = Post.objects.all()
         # model_bt = Bot.objects.all()
         for obj in model_qs:
-            Post.objects.filter(is_for_sched=False, bot=UserSettings.objects.get(user=request.user).bot_selected).update(is_sent=False)
+            Post.objects.filter(is_for_sched=False,
+                                bot=UserSettings.objects.get(user=request.user).bot_selected).update(is_sent=False)
             Chat.objects.filter(bot=UserSettings.objects.get(user=request.user).bot_selected).update(day=1)
             Bot.objects.filter(id=UserSettings.objects.get(user=request.user).bot_selected.id).update(is_started=False)
     # html_template = loader.get_template('home/post_list.html')
@@ -357,5 +379,3 @@ def ves_v_norme_redirect(request):
 def change_bot_selected(request, id):
     UserSettings.objects.filter(user=request.user).update(bot_selected=Bot.objects.get(id=id))
     return redirect("/bot")
-
-

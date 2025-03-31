@@ -41,7 +41,9 @@ urlpatterns = [
     path('change_bot_selected/<int:id>', views.change_bot_selected, name='Change bot selected'),
 
     path('notify', views.UserToMailListView.as_view(), name='notify'),
-    path('message_to_send_update/<int:pk>', views.MessageToMailUpdateView.as_view(), name='message_to_send_update'),
+    path('message_to_notify_create', views.MessageToNotifyCreateView.as_view(), name='message_to_notify_create'),
+    path('message_to_notify_update/<int:pk>', views.MessageToNotifyUpdateView.as_view(), name='message_to_notify_update'),
+    path('message_to_notify_delete/<int:pk>', views.message_to_notify_delete, name='message_to_notify_delete'),
 ]
 
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

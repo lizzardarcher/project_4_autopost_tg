@@ -26,7 +26,7 @@ admin.site.register(Bot)
 admin.site.register(UserToMail)
 admin.site.register(Post)
 admin.site.register(Poll)
-admin.site.register(MessageToSend)
+admin.site.register(MessageToNotify)
 admin.site.site_url = "/bot"
 
 # @admin.action(description="Mark selected stories as published")

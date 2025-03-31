@@ -14,57 +14,105 @@
     {% endif %}
 
 
-    <h1>Настройки сообщений для отправки</h1>
+    <h1>Сообщения для рассылки в личку</h1>
+    <a href="{% url 'message_to_notify_create' %}" class="btn btn-primary mb-3">Создать</a>
 
-    {% if message_to_send %}
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Сообщение 1</th>
-                <th>День 1 отправки</th>
-                <th>День 2 отправки</th>
-                <th>Время отправки</th>
+    <div class="row">
+        {% for message in messages_to_notify %}
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">  <!-- Added shadow for depth -->
+                    <div class="card-body">
+                        <h5 class="card-title">{{ message.message }}</h5>
+                        <!-- Truncate long messages -->
+                        <!-- <p class="card-text">{{ message.message }}</p> --> <!-- Remove duplicate display -->
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <b>Дни отправки:</b>
+                            <ul class="list-unstyled">  <!-- Use list-unstyled for cleaner look -->
+                                {% if message.day_to_send_1 %}
+                                    <li>
+                                        <i class="tim-icons icon-calendar-60"></i>
+                                        {{ message.get_day_to_send_1_display }}
+                                    </li>
+                                {% endif %}
+                                {% if message.day_to_send_2 %}
+                                    <li>
+                                        <i class="tim-icons icon-calendar-60"></i>
+                                        {{ message.get_day_to_send_2_display }}
+                                    </li>
+                                {% endif %}
+                                {% if message.day_to_send_3 %}
+                                    <li>
+                                        <i class="tim-icons icon-calendar-60"></i>
+                                        {{ message.get_day_to_send_3_display }}
+                                    </li>
+                                {% endif %}
+                                {% if message.day_to_send_4 %}
+                                    <li>
+                                        <i class="tim-icons icon-calendar-60"></i>
+                                        {{ message.get_day_to_send_4_display }}
+                                    </li>
+                                {% endif %}
+                                {% if message.day_to_send_5 %}
+                                    <li>
+                                        <i class="tim-icons icon-calendar-60"></i>
+                                        {{ message.get_day_to_send_5_display }}
+                                    </li>
+                                {% endif %}
+                                {% if message.day_to_send_6 %}
+                                    <li>
+                                        <i class="tim-icons icon-calendar-60"></i>
+                                        {{ message.get_day_to_send_6_display }}
+                                    </li>
+                                {% endif %}
+                                {% if message.day_to_send_7 %}
+                                    <li>
+                                        <i class="tim-icons icon-calendar-60"></i>
+                                        {{ message.get_day_to_send_7_display }}
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Время отправки:</b>
+                            <i class="tim-icons icon-time-alarm"></i>
+                            {{ message.time_to_send }}
+                        </li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="{% url 'message_to_notify_update' message.id %}"
+                           class="btn btn-warning btn-sm">
+                            <i class="tim-icons icon-pencil"></i> Редактировать
+                        </a>
+                        <a onclick="return confirm('Вы уверены?')"
+                           href="{% url 'message_to_notify_delete' message.id %}"
+                           class="btn btn-danger btn-sm">
+                            <i class="tim-icons icon-simple-remove"></i> Удалить
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p>Сообщения не найдены. Пожалуйста, создайте их в этом разделе.</p>
+            </div>
+        {% endfor %}
+    </div>
 
-                <th>Сообщение 2</th>
-                <th>День 1 отправки</th>
-                <th>День 2 отправки</th>
-                <th>Время отправки</th>
-                <th>Действия</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{ message_to_send.message_1 }}</td>
-                <td>{{ message_to_send.get_day_to_send_1_first_display }}</td>
-                <td>{{ message_to_send.get_day_to_send_1_second_display }}</td>
-                <td>{{ message_to_send.time_to_send_1|time:"H:i" }}</td>
 
-                <td>{{ message_to_send.message_2 }}</td>
-                <td>{{ message_to_send.get_day_to_send_2_first_display }}</td>
-                <td>{{ message_to_send.get_day_to_send_2_second_display }}</td>
-                <td>{{ message_to_send.time_to_send_2|time:"H:i" }}</td>
-                <td>
-                    <a href="{% url 'message_to_send_update' message_to_send.id %}"
-                       class="btn btn-link btn-warning btn-icon btn-sm edit"><i
-                            class="tim-icons icon-pencil"></i></a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
 
-    {% else %}
-        <p>Настройки сообщений не найдены. Пожалуйста, создайте настройки в админке.</p>
-    {% endif %}
+
 
     <hr>  <!-- Разделитель между таблицами -->
 
-    <h1>Список пользователей для рассылки уведомлений</h1>
+    <h3>Список пользователей для рассылки уведомлений</h3>
 
     <table class="table table-striped">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Имя пользователя</th>
+            <th>Username</th>
             <th>Имя</th>
             <th>Фамилия</th>
         </tr>
