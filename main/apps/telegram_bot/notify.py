@@ -88,7 +88,10 @@ async def run_bot(bot):
                 first_name = call.message.chat.first_name
                 last_name = call.message.chat.last_name
                 try:
-                    UserToMail.objects.get(id=user_id).delete()
+                    try:
+                        UserToMail.objects.get(id=user_id).delete()
+                    except:
+                        ...
                     UserToMail.objects.create(id=user_id, username=username or '---',
                                               first_name=first_name or '---', last_name=last_name or '---')
                 except:

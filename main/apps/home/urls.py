@@ -44,6 +44,7 @@ urlpatterns = [
     path('message_to_notify_create', views.MessageToNotifyCreateView.as_view(), name='message_to_notify_create'),
     path('message_to_notify_update/<int:pk>', views.MessageToNotifyUpdateView.as_view(), name='message_to_notify_update'),
     path('message_to_notify_delete/<int:pk>', views.message_to_notify_delete, name='message_to_notify_delete'),
+    path('user_to_notify_delete/<int:pk>', views.user_to_notify_delete, name='user_to_notify_delete'),
 ]
 
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -19,90 +19,88 @@
 
     <div class="row">
         {% for message in messages_to_notify %}
-            <div class="col-md-3 mb-4">
-                <div class="card h-100 shadow-sm">  <!-- Added shadow for depth -->
-                    <div class="card-body">
-                        <h5 class="card-title">{{ message.message }}</h5>
-                        <!-- Truncate long messages -->
-                        <!-- <p class="card-text">{{ message.message }}</p> --> <!-- Remove duplicate display -->
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <b>Дни отправки:</b>
-                            <ul class="list-unstyled">  <!-- Use list-unstyled for cleaner look -->
-                                {% if message.day_to_send_1 %}
-                                    <li>
-                                        <i class="tim-icons icon-calendar-60"></i>
-                                        {{ message.get_day_to_send_1_display }}
-                                    </li>
-                                {% endif %}
-                                {% if message.day_to_send_2 %}
-                                    <li>
-                                        <i class="tim-icons icon-calendar-60"></i>
-                                        {{ message.get_day_to_send_2_display }}
-                                    </li>
-                                {% endif %}
-                                {% if message.day_to_send_3 %}
-                                    <li>
-                                        <i class="tim-icons icon-calendar-60"></i>
-                                        {{ message.get_day_to_send_3_display }}
-                                    </li>
-                                {% endif %}
-                                {% if message.day_to_send_4 %}
-                                    <li>
-                                        <i class="tim-icons icon-calendar-60"></i>
-                                        {{ message.get_day_to_send_4_display }}
-                                    </li>
-                                {% endif %}
-                                {% if message.day_to_send_5 %}
-                                    <li>
-                                        <i class="tim-icons icon-calendar-60"></i>
-                                        {{ message.get_day_to_send_5_display }}
-                                    </li>
-                                {% endif %}
-                                {% if message.day_to_send_6 %}
-                                    <li>
-                                        <i class="tim-icons icon-calendar-60"></i>
-                                        {{ message.get_day_to_send_6_display }}
-                                    </li>
-                                {% endif %}
-                                {% if message.day_to_send_7 %}
-                                    <li>
-                                        <i class="tim-icons icon-calendar-60"></i>
-                                        {{ message.get_day_to_send_7_display }}
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                        <li class="list-group-item">
-                            <b>Время отправки:</b>
-                            <i class="tim-icons icon-time-alarm"></i>
-                            {{ message.time_to_send }}
-                        </li>
-                    </ul>
-                    <div class="card-body">
-                        <a href="{% url 'message_to_notify_update' message.id %}"
-                           class="btn btn-warning btn-sm">
-                            <i class="tim-icons icon-pencil"></i> Редактировать
-                        </a>
-                        <a onclick="return confirm('Вы уверены?')"
-                           href="{% url 'message_to_notify_delete' message.id %}"
-                           class="btn btn-danger btn-sm">
-                            <i class="tim-icons icon-simple-remove"></i> Удалить
-                        </a>
+            {% if message.bot == bot_selected %}
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm">  <!-- Added shadow for depth -->
+                        <div class="card-body">
+                            <h5 class="card-title">{{ message.message }}</h5>
+                            <!-- Truncate long messages -->
+                            <!-- <p class="card-text">{{ message.message }}</p> --> <!-- Remove duplicate display -->
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <b>Дни отправки:</b>
+                                <ul class="list-unstyled">  <!-- Use list-unstyled for cleaner look -->
+                                    {% if message.day_to_send_1 %}
+                                        <li>
+                                            <i class="tim-icons icon-calendar-60"></i>
+                                            {{ message.get_day_to_send_1_display }}
+                                        </li>
+                                    {% endif %}
+                                    {% if message.day_to_send_2 %}
+                                        <li>
+                                            <i class="tim-icons icon-calendar-60"></i>
+                                            {{ message.get_day_to_send_2_display }}
+                                        </li>
+                                    {% endif %}
+                                    {% if message.day_to_send_3 %}
+                                        <li>
+                                            <i class="tim-icons icon-calendar-60"></i>
+                                            {{ message.get_day_to_send_3_display }}
+                                        </li>
+                                    {% endif %}
+                                    {% if message.day_to_send_4 %}
+                                        <li>
+                                            <i class="tim-icons icon-calendar-60"></i>
+                                            {{ message.get_day_to_send_4_display }}
+                                        </li>
+                                    {% endif %}
+                                    {% if message.day_to_send_5 %}
+                                        <li>
+                                            <i class="tim-icons icon-calendar-60"></i>
+                                            {{ message.get_day_to_send_5_display }}
+                                        </li>
+                                    {% endif %}
+                                    {% if message.day_to_send_6 %}
+                                        <li>
+                                            <i class="tim-icons icon-calendar-60"></i>
+                                            {{ message.get_day_to_send_6_display }}
+                                        </li>
+                                    {% endif %}
+                                    {% if message.day_to_send_7 %}
+                                        <li>
+                                            <i class="tim-icons icon-calendar-60"></i>
+                                            {{ message.get_day_to_send_7_display }}
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Время отправки:</b>
+                                <i class="tim-icons icon-time-alarm"></i>
+                                {{ message.time_to_send }}
+                            </li>
+                        </ul>
+                        <div class="card-body">
+                            <a href="{% url 'message_to_notify_update' message.id %}"
+                               class="btn btn-warning btn-sm">
+                                <i class="tim-icons icon-pencil"></i> Редактировать
+                            </a>
+                            <a onclick="return confirm('Вы уверены?')"
+                               href="{% url 'message_to_notify_delete' message.id %}"
+                               class="btn btn-danger btn-sm">
+                                <i class="tim-icons icon-simple-remove"></i> Удалить
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         {% empty %}
             <div class="col-12">
                 <p>Сообщения не найдены. Пожалуйста, создайте их в этом разделе.</p>
             </div>
         {% endfor %}
     </div>
-
-
-
-
 
     <hr>  <!-- Разделитель между таблицами -->
 
@@ -115,6 +113,7 @@
             <th>Username</th>
             <th>Имя</th>
             <th>Фамилия</th>
+            <th>#</th>
         </tr>
         </thead>
         <tbody>
@@ -124,6 +123,11 @@
                 <td>{{ user.username }}</td>
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
+                <td>
+                    <a href="{% url 'user_to_notify_delete' user.id %}" onclick="return confirm('Вы уверены?')"
+                       class="btn btn-link btn-danger btn-icon btn-sm remove"><i
+                            class="tim-icons icon-simple-remove"></i></a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

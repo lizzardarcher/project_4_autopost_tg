@@ -162,9 +162,10 @@ class MessageToSendForm(forms.ModelForm):
 class MessageToNotifyForm(forms.ModelForm):
     class Meta:
         model = MessageToNotify
-        fields = ['message', 'day_to_send_1', 'day_to_send_2', 'day_to_send_3', 'day_to_send_4', 'day_to_send_5',
+        fields = ['bot', 'message', 'day_to_send_1', 'day_to_send_2', 'day_to_send_3', 'day_to_send_4', 'day_to_send_5',
                   'day_to_send_6', 'day_to_send_7', 'time_to_send']
         widgets = {
+            'bot': forms.Select(attrs={'class': 'form-control text-info'}),
             'message': forms.Textarea(attrs={'class': 'form-text text-dark', 'placeholder': '...', }),
             'day_to_send_1': forms.Select(attrs={'class': 'form-control text-info'}),
             'day_to_send_2': forms.Select(attrs={'class': 'form-control text-info'}),

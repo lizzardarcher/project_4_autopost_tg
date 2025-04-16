@@ -102,6 +102,12 @@ def message_to_notify_delete(request, pk):
     return HttpResponseRedirect(reverse('notify'))
 
 
+def user_to_notify_delete(request, pk):
+    UserToMail.objects.filter(id=pk).delete()
+    messages.success(request, 'Удалено успешно!')
+    return HttpResponseRedirect(reverse('notify'))
+
+
 # CHATS #####################################################################
 
 class ChatListView(SuccessMessageMixin, LoginRequiredMixin, ListView):

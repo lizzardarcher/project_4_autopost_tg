@@ -289,6 +289,8 @@ class MessageToNotify(models.Model):
     day_to_send_7 = models.CharField(max_length=15, choices=DAY_CHOICES, null=True, blank=True, verbose_name="День отправки сообщения 7")
     time_to_send = models.TimeField(verbose_name="Время отправки сообщения")
 
+    bot = models.ForeignKey(Bot, null=True, blank=False, default=None, on_delete=models.CASCADE, verbose_name='Бот')
+
     def __str__(self):
         return f"Сообщение: {self.message[:20]}..."
 
