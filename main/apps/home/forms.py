@@ -65,11 +65,11 @@ class PostForm(forms.ModelForm):
             'post_time': forms.TimeInput(attrs={'class': 'form-control text-info', 'type': 'time'}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super(PostForm, self).__init__(*args, **kwargs)
-        bot_selected = UserSettings.objects.get(user=User.objects.first()).bot_selected
-        bot_set = Bot.objects.filter(id=bot_selected.id)
-        self.fields['bot'].queryset = bot_set
+    # def __init__(self, *args, **kwargs):
+    #     super(PostForm, self).__init__(*args, **kwargs)
+    #     bot_selected = UserSettings.objects.get(user=User.objects.first()).bot_selected
+    #     bot_set = Bot.objects.filter(id=bot_selected.id)
+    #     self.fields['bot'].queryset = bot_set
 
 
 class PostForScheduleForm(forms.ModelForm):
