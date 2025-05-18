@@ -40,6 +40,7 @@ class BotForm(forms.ModelForm):
             'ref': forms.TextInput(attrs={'class': 'form-control text-info'}),
             'token': forms.TextInput(attrs={'class': 'form-control text-info'}),
             'title': forms.TextInput(attrs={'class': 'form-control text-info'}),
+            'is_started': forms.CheckboxInput(),
             'start_date': forms.DateTimeInput(format='%Y-%m-%d',
                                               attrs={'class': 'form-control text-info', 'type': 'date'}),
             'day': forms.Select(attrs={'class': 'form-control text-info'}),

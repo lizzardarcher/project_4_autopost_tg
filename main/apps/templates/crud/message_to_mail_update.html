@@ -1,7 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
     <body class="bg-light bg-gradient">
-    <div class="card col-4">
+    <div class="card col-md-6 col-sm-12">
         <a href="{% url 'notify' %}"><h3>Назад</h3></a>
         <form method="post">
             {% csrf_token %}
