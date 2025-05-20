@@ -287,6 +287,18 @@ class BotListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
     context_object_name = 'bots'
 
 
+class BotCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    model = Bot
+    extra_context = {'segment': 'bot'}
+    template_name = 'crud/bot_create.html'
+    form_class = BotForm
+    success_url = '/bot_list'
+    success_message = 'Бот успешно добавлен!'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 class BotUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = Bot
     extra_context = {'segment': 'bot'}
@@ -295,6 +307,16 @@ class BotUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     success_url = '/bot_list'
     success_message = 'Бот успешно обновлён!'
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class BotDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
+    model = Bot
+    success_url = '/bot_list'
+    template_name = 'crud/bot_delete.html'
+    success_message = 'Бот успешно Удалён!'
 
 # POLLS #####################################################################
 

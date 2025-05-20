@@ -3,14 +3,12 @@ from apps.home.models import Post, Bot, Chat
 
 import traceback
 from time import sleep
-from datetime import date, datetime, timedelta
-import sys
+from datetime import datetime
 import logging
 from telebot import TeleBot
 
 logging.basicConfig(filename='log.log', level=logging.WARNING)
 
-# MEDIA_ROOT = 'static/media/'
 MEDIA_ROOT = '/var/www/html/main/core/static/media/'
 
 def post():

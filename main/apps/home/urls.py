@@ -10,7 +10,11 @@ urlpatterns = [
 
     path('', views.ves_v_norme_redirect, name='ves_v_norme_redirect'),
     path('bot', views.index, name='home'),
-    path('bot_list', views.BotListView.as_view(), name='bot list'),
+    path('bot_list', views.BotListView.as_view(), name='bot_list'),
+
+    path('bot_create', views.BotCreateView.as_view(), name='bot_create'),
+    path('bot_delete/<int:pk>', views.BotDeleteView.as_view(), name='bot_delete'),
+
     path('update_post_is_sent', views.update_post_is_sent, name='update_post_is_sent'),
     path('user_profile_update/<int:pk>', views.UserSettingsUpdateView.as_view(), name='user update view'),
     path('user_profile/<int:pk>', views.UserUpdateView.as_view(), name='user profile'),
@@ -36,7 +40,7 @@ urlpatterns = [
     path('poll_update/<int:pk>', views.PollUpdateView.as_view(), name='Poll update view'),
     path('poll_delete/<int:pk>', views.PollDeleteView.as_view(), name='Poll delete view'),
 
-    path('bot_update/<int:pk>', views.BotUpdateView.as_view(), name='Bot update view'),
+    path('bot_update/<int:pk>', views.BotUpdateView.as_view(), name='bot_update'),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     path('change_bot_selected/<int:id>', views.change_bot_selected, name='Change bot selected'),
 

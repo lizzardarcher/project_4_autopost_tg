@@ -1,4 +1,3 @@
-import logging
 import logging.handlers
 import traceback
 from time import sleep
@@ -49,7 +48,7 @@ def send_telegram_message(bot, chat_id, text=None, mediafile=None):
                     bot.send_video(chat_id=chat_id, video=f, caption=text, parse_mode='HTML')
                 else:
                     logger.warning(f"Unsupported media file type: {mediafile}")
-                    return False  # Indicate failure
+                    return False
         else:
             logger.info(f"Sending text message: {text}")
             bot.send_message(chat_id=chat_id, text=text, parse_mode='HTML')
@@ -60,10 +59,16 @@ def send_telegram_message(bot, chat_id, text=None, mediafile=None):
     except apihelper.ApiException as e:
         logger.error(f"Telegram API error: {e} Chat ID: {chat_id}")
         logger.error(traceback.format_exc())
+        send_telegram_alert(
+            f"Ошибка отправки Telegram сообщения: {e} "
+            f"Чат ID: {Chat.objects.filter(chat_id=chat_id).first()}"
+            f"Бот ID: {Bot.objects.filter(chat_id=chat_id).first()}"
+            f"Описание ошибки: {traceback.format_exc()}"
+        )
         if '403' in str(e):
             logger.warning(f"Bot is not an administrator in chat {chat_id}")
-            return False  # Indicate failure
-        return False  # Indicate failure
+            return False
+        return False
 
     except FileNotFoundError:
         full_media_path = MEDIA_ROOT + mediafile if mediafile else "No media file specified"
@@ -123,12 +128,16 @@ def process_bot(b):
     bot = TeleBot(token=b.token)
     # Создает экземпляр TeleBot
     start_date_bot = b.start_date
+    logger.info(f"1) Bot {b.id}: Start Date: {start_date_bot}")
     # Получает дату начала работы бота из объекта `b` (объект модели Bot).
     is_start_date_bot = start_date_bot == date.today()
+    logger.info(f"2) Bot {b.id}: Start Date Match: {is_start_date_bot} Current Date: {date.today()}")
     # Сравнивает дату начала работы бота с текущей датой, чтобы определить, является ли сегодня день начала.
     is_bot_active = b.is_started
+    logger.info(f"3) Bot {b.id}: Active: {is_bot_active}")
     # Получает статус активности бота из объекта `b`.
     post_bot_day = b.day
+    logger.info(f"4) Bot {b.id}: Day: {post_bot_day}")
     # Получает день недели для отправки контента (например, 1 для понедельника, 2 для вторника и т.д.) из объекта `b`.
 
     logger.debug(f"Bot {b.id} Status: Start Date Match: {is_start_date_bot}, Active: {is_bot_active}, Day: {post_bot_day}")
@@ -137,11 +146,11 @@ def process_bot(b):
     if is_start_date_bot and is_bot_active:
         # Проверяет, является ли сегодня день начала работы бота И бот активен.  Контент будет отправлен только если оба условия выполнены.
         chats = Chat.objects.filter(bot=b)
-        # Получает все чаты, связанные с данным ботом, из базы данных.  Предполагается, что существует модель Chat и связь "один-ко-многим" между Bot и Chat.
+        # Получает все чаты, связанные с данным ботом, из базы данных.
         messages = Post.objects.filter(is_sent=False, day=post_bot_day, bot=b)
-        # Получает все неотправленные сообщения, предназначенные для отправки в день недели `post_bot_day` и связанные с данным ботом, из базы данных.  Предполагается, что существует модель Post.
+        # Получает все неотправленные сообщения, предназначенные для отправки в день недели `post_bot_day` и связанные с данным ботом, из базы данных.
         polls = Poll.objects.filter(is_sent=False, day=post_bot_day, bot=b)
-        # Получает все неотправленные опросы, предназначенные для отправки в день недели `post_bot_day` и связанные с данным ботом, из базы данных.  Предполагается, что существует модель Poll.
+        # Получает все неотправленные опросы, предназначенные для отправки в день недели `post_bot_day` и связанные с данным ботом, из базы данных.
 
         logger.info(
             f"Bot {b.id}: Found {chats.count()} chats, {messages.count()} messages, {polls.count()} polls to process.")
@@ -222,11 +231,24 @@ def process_bot(b):
                 else:
                     logger.debug(f"Bot {b.id}, Chat {chat_id}: Skipping poll ID {poll.id} due to time or day mismatch.")
 
+def send_telegram_alert(message):
+    """Отправляет сообщение в Telegram-чат."""
+    token = '7773031484:AAFe0j5IDJq_O4l3Jr7KQEBOmGrvtmHs9SI'
+    chat_id = -1002504453107
+
+    bot_telegram = TeleBot(token=token)
+
+    try:
+        bot_telegram.send_message(chat_id=chat_id, text=message, parse_mode='HTML')
+        logger.info(f"Telegram alert sent: {message}")
+    except Exception as e:
+        logger.error(f"Error sending Telegram alert: {e}")
+
 
 def post():
     """Основная функция для обработки ботов и отправки контента."""
     bots = Bot.objects.filter(is_started=True)
-    logger.info(f"Starting 'post' function.  Found {bots.count()} bots to process.")
+    logger.info(f"Starting 'post' function. Found {bots.count()} bots to process.")
 
     for bot in bots:
         process_bot(bot)
@@ -240,32 +262,43 @@ def post():
         polls = Poll.objects.filter(is_sent=False, day=post_bot_day, bot=b)
 
         logger.debug(
-            f"Bot {b.id}: Checking for scheduled day/date update. Messages: {messages.count()}, Polls: {polls.count()}")
+            f"Bot {b.title}: Checking for scheduled day/date update. Messages: {messages.count()}, Polls: {polls.count()}")
 
-        if not messages.exists() and not polls.exists():  # Use .exists() for efficiency
+        if not messages.exists() and not polls.exists():
             new_start_date_bot = start_date_bot + timedelta(days=1)
-            new_post_bot_day = (post_bot_day % 7) + 1  # Cycle through days 1-7
+            new_post_bot_day = (post_bot_day % 7) + 1
 
             b.day = new_post_bot_day
             b.start_date = new_start_date_bot
             b.save()
-            logger.info(f'Updating bot {b.id} to day {new_post_bot_day} and date {new_start_date_bot}')
+            logger.info(f'Updating bot {b.title} to day {new_post_bot_day} and date {new_start_date_bot}')
         else:
-            logger.debug(f"Bot {b.id}: Not updating day/date because messages or polls are still pending.")
+            logger.debug(
+                f"Bot {b.title}: Not updating day/date because messages or polls are still pending."
+                f"Messages: {messages.count()} {messages.first().post_time} {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, Polls: {polls.count()} {polls}")
 
     logger.info("Finished 'post' function.")
 
 
 if __name__ == '__main__':
     logger.info("Starting main post script.")
+    send_telegram_alert(
+        f"Скрипт для публикации контента запущен [<code>{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</code>]\n\n"
+        f"В базе данных находится:\n"
+        f"Ботов: [<code>{Bot.objects.count()}</code>]\n"
+        f"Групп: [<code>{Chat.objects.count()}</code>]\n"
+        f"Cообщений: [<code>{Post.objects.count()}</code>]\n"
+        f"Опросов: [<code>{Poll.objects.count()}</code>]."
+    )
     while True:
         try:
             post()
             sleep(5)
         except KeyboardInterrupt:
             logger.info('Post script exiting due to KeyboardInterrupt.')
-            print('Post script exiting.')
             break
         except Exception as e:
             logger.error(f"An unhandled exception occurred in the main loop: {e}")
+            send_telegram_alert(
+                f"Скрипт для публикации контента завершил работу с ошибкой: {e}")
             logger.error(traceback.format_exc())

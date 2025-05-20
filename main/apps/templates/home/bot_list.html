@@ -25,7 +25,7 @@
             </div>
             <div class="card-body">
                 <div class="toolbar">
-
+                    <a class="btn btn-simple btn-info" href="{% url 'bot_create' %}">+ Добавить</a>
                 </div>
                 <table id="datatable" class="table table-striped">
                     <thead>
@@ -49,9 +49,12 @@
                         <td>{% if bot.is_started %}✅{% else %}❌{% endif %}</td>
                         <td>{{ bot.day }}</td>
                         <td>
-                            <a href="/bot_update/{{ bot.id }}"
+                            <a href="{% url 'bot_update' bot.id %}"
                                class="btn btn-link btn-warning btn-icon btn-sm edit"><i
                                     class="tim-icons icon-pencil"></i></a>
+                            <a href="{% url 'bot_delete' bot.id %}"
+                               class="btn btn-link btn-danger btn-icon btn-sm remove"><i
+                                    class="tim-icons icon-simple-remove"></i></a>
                         </td>
                     </tr>
                     {% endfor %}

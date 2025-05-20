@@ -46,7 +46,6 @@ class BotForm(forms.ModelForm):
             'day': forms.Select(attrs={'class': 'form-control text-info'}),
         }
 
-
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
