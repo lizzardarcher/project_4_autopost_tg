@@ -266,12 +266,11 @@ def post():
 
         if not messages.exists() and not polls.exists():
             new_start_date_bot = start_date_bot + timedelta(days=1)
-            new_post_bot_day = (post_bot_day % 7) + 1
 
-            b.day = new_post_bot_day
+            b.day = post_bot_day + 1
             b.start_date = new_start_date_bot
             b.save()
-            logger.info(f'Updating bot {b.title} to day {new_post_bot_day} and date {new_start_date_bot}')
+            logger.info(f'Updating bot {b.title} to day {post_bot_day + 1} and date {new_start_date_bot}')
         else:
             logger.debug(
                 f"Bot {b.title}: Not updating day/date because messages or polls are still pending."
@@ -282,14 +281,14 @@ def post():
 
 if __name__ == '__main__':
     logger.info("Starting main post script.")
-    send_telegram_alert(
-        f"Скрипт для публикации контента запущен [<code>{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</code>]\n\n"
-        f"В базе данных находится:\n"
-        f"Ботов: [<code>{Bot.objects.count()}</code>]\n"
-        f"Групп: [<code>{Chat.objects.count()}</code>]\n"
-        f"Cообщений: [<code>{Post.objects.count()}</code>]\n"
-        f"Опросов: [<code>{Poll.objects.count()}</code>]."
-    )
+    # send_telegram_alert(
+    #     f"Скрипт для публикации контента запущен [<code>{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</code>]\n\n"
+    #     f"В базе данных находится:\n"
+    #     f"Ботов: [<code>{Bot.objects.count()}</code>]\n"
+    #     f"Групп: [<code>{Chat.objects.count()}</code>]\n"
+    #     f"Cообщений: [<code>{Post.objects.count()}</code>]\n"
+    #     f"Опросов: [<code>{Poll.objects.count()}</code>]."
+    # )
     while True:
         try:
             post()

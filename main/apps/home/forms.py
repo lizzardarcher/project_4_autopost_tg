@@ -24,11 +24,13 @@ class ChatForm(forms.ModelForm):
             'bot',
             'reference',
             'title',
+            'chat_id'
         ]
         widgets = {
             'bot': forms.Select(attrs={'class': 'form-control text-info'}),
             'reference': forms.TextInput(attrs={'class': 'form-control text-info'}),
             'title': forms.TextInput(attrs={'class': 'form-control text-info'}),
+            'chat_id': forms.TextInput(attrs={'class': 'form-control text-info'}),
         }
 
 
