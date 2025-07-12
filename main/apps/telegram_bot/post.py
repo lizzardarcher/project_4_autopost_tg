@@ -34,6 +34,8 @@ def send_telegram_message(bot, chat_id, text=None, mediafile=None):
 
         if mediafile:
             full_media_path = MEDIA_ROOT + mediafile
+            if text is None:
+                text = '*************************'
             logger.info(f"Sending media file: {full_media_path}")
 
             with open(full_media_path, 'rb') as f:
@@ -52,6 +54,7 @@ def send_telegram_message(bot, chat_id, text=None, mediafile=None):
         else:
             logger.info(f"Sending text message: {text}")
             bot.send_message(chat_id=chat_id, text=text, parse_mode='HTML')
+
 
         logger.info(f"Successfully sent Telegram message to chat ID: {chat_id}")
         return True
@@ -123,93 +126,45 @@ def process_bot(b):
     """Обрабатывает одного бота, отправляя сообщения и опросы."""
 
 
-    logger.info(f"Processing bot: {b.id}, Token: {b.token[:5]}... (truncated)")  # Log bot ID and truncated token
-    # Логирует начало обработки бота, указывая его ID и токен
     bot = TeleBot(token=b.token)
-    # Создает экземпляр TeleBot
     start_date_bot = b.start_date
-    logger.info(f"1) Bot {b.id}: Start Date: {start_date_bot}")
-    # Получает дату начала работы бота из объекта `b` (объект модели Bot).
     is_start_date_bot = start_date_bot == date.today()
-    logger.info(f"2) Bot {b.id}: Start Date Match: {is_start_date_bot} Current Date: {date.today()}")
-    # Сравнивает дату начала работы бота с текущей датой, чтобы определить, является ли сегодня день начала.
     is_bot_active = b.is_started
-    logger.info(f"3) Bot {b.id}: Active: {is_bot_active}")
-    # Получает статус активности бота из объекта `b`.
     post_bot_day = b.day
-    logger.info(f"4) Bot {b.id}: Day: {post_bot_day}")
-    # Получает день недели для отправки контента (например, 1 для понедельника, 2 для вторника и т.д.) из объекта `b`.
-
-    logger.debug(f"Bot {b.id} Status: Start Date Match: {is_start_date_bot}, Active: {is_bot_active}, Day: {post_bot_day}")
-    # Логирует статус бота: совпадает ли дата начала с сегодняшней, активен ли бот и в какой день недели нужно отправлять контент.  Эта информация полезна для отладки.
 
     if is_start_date_bot and is_bot_active:
-        # Проверяет, является ли сегодня день начала работы бота И бот активен.  Контент будет отправлен только если оба условия выполнены.
         chats = Chat.objects.filter(bot=b)
-        # Получает все чаты, связанные с данным ботом, из базы данных.
-        messages = Post.objects.filter(is_sent=False, day=post_bot_day, bot=b)
-        # Получает все неотправленные сообщения, предназначенные для отправки в день недели `post_bot_day` и связанные с данным ботом, из базы данных.
+        messages = Post.objects.filter(is_sent=False, day=post_bot_day, bot=b, is_for_sched=False)
         polls = Poll.objects.filter(is_sent=False, day=post_bot_day, bot=b)
-        # Получает все неотправленные опросы, предназначенные для отправки в день недели `post_bot_day` и связанные с данным ботом, из базы данных.
-
-        logger.info(
-            f"Bot {b.id}: Found {chats.count()} chats, {messages.count()} messages, {polls.count()} polls to process.")
-        # Логирует количество найденных чатов, сообщений и опросов для обработки.
 
         for chat in chats:
-            # Перебирает все чаты, связанные с ботом.
             chat_id = chat.chat_id if hasattr(chat, 'chat_id') and chat.chat_id else chat.reference  # Get chat ID safely
-            # Получает ID чата.  Если у объекта chat есть атрибут `chat_id` и его значение истинно, то используется он.  В противном случае используется атрибут `reference`.  Это обеспечивает безопасное получение ID чата, даже если структура данных изменится.
 
-            logger.info(f"Bot {b.id}: Processing chat ID: {chat_id}")
-            # Логирует начало обработки чата с указанным ID.
-
-            # Process messages
-            # Комментарий указывает на начало обработки сообщений.
             for message in messages:
-                # Перебирает все сообщения, которые нужно отправить в текущий чат.
-                post_time = datetime.strptime(message.post_time.__str__(), '%H:%M:%S').strftime('%H:%M')
-                # Преобразует время отправки сообщения (из объекта datetime) в строку в формате HH:MM.
+                try:
+                    post_time = datetime.strptime(message.post_time.__str__(), '%H:%M:%S').strftime('%H:%M')
+                except Exception as e:
+                    break
                 server_time_plus = datetime.strftime(datetime.now() + timedelta(minutes=3), '%H:%M')
-                # Получает текущее время сервера + 3 минуты в формате HH:MM.  Это создает "окно" в 3 минуты, чтобы сообщения не пропускались из-за небольших расхождений во времени.
 
-                logger.debug(
-                    f"Bot {b.id}, Chat {chat_id}: Message ID {message.id}, Post Time: {post_time}, Server Time + 3: {server_time_plus}")
-                # Логирует ID сообщения, время отправки сообщения и текущее время сервера + 3 минуты.  Эта информация полезна для отладки проблем, связанных с расписанием.
-
-                if post_time >= datetime.now().strftime(
-                        '%H:%M') and post_time < server_time_plus and message.day == post_bot_day:
-                    # Проверяет, находится ли время отправки сообщения в пределах "окна" и соответствует ли день отправки сообщения текущему дню недели для бота.
-                    logger.warning(
-                        f"Bot {b.id}, Chat {chat_id}: Sending message ID {message.id} with text: {message.text[:50]}... (truncated)")
-                    # Логирует отправку сообщения, указывая его ID и усеченный текст (для предотвращения слишком длинных логов).
+                if post_time >= datetime.now().strftime('%H:%M') and post_time < server_time_plus and message.day == post_bot_day:
+                    logger.warning(f"Bot {b.id}, Chat {chat_id}: Sending message ID {message.id} with text: {message.text[:50]}... (truncated)")
                     media_file_name = message.media_file.name if message.media_file else None
-                    # Получает имя файла медиа, связанного с сообщением (если таковой имеется).
                     if send_telegram_message(bot, chat_id, message.text, media_file_name):
-                        # Отправляет сообщение в Telegram с помощью функции `send_telegram_message`.
                         Post.objects.filter(id=message.id).update(is_sent=True)
                         chat.error = ''
                         chat.save()
-                        logger.info(f"Bot {b.id}, Chat {chat_id}: Successfully sent message ID {message.id}")
                     else:
-                        # Если отправка сообщения завершилась неудачей.
                         chat.error = 'Failed to send message. See logs.'
                         chat.save()
-                        logger.error(f"Bot {b.id}, Chat {chat_id}: Failed to send message ID {message.id}. See logs.")
 
                 else:
-                    # Если время отправки сообщения не находится в пределах "окна" или день отправки не соответствует текущему дню недели для бота.
-                    logger.debug(
-                        f"Bot {b.id}, Chat {chat_id}: Skipping message ID {message.id} due to time or day mismatch.")
-                    # Логирует пропуск сообщения из-за несоответствия времени или дня.
+                    ...
 
             # Process polls
             for poll in polls:
                 post_time = poll.post_time.strftime('%H:%M')  # Directly format datetime object
                 server_time_plus = datetime.strftime(datetime.now() + timedelta(minutes=3), '%H:%M')
-
-                logger.debug(
-                    f"Bot {b.id}, Chat {chat_id}: Poll ID {poll.id}, Post Time: {post_time}, Server Time + 3: {server_time_plus}")
 
                 if post_time >= datetime.now().strftime(
                         '%H:%M') and post_time < server_time_plus and poll.day == post_bot_day:
@@ -222,14 +177,12 @@ def process_bot(b):
                         Poll.objects.filter(id=poll.id).update(is_sent=True)
                         chat.error = ''
                         chat.save()
-                        logger.info(f"Bot {b.id}, Chat {chat_id}: Successfully sent poll ID {poll.id}")
                     else:
                         chat.error = 'Failed to send poll. See logs.'
                         chat.save()
-                        logger.error(f"Bot {b.id}, Chat {chat_id}: Failed to send poll ID {poll.id}. See logs.")
 
                 else:
-                    logger.debug(f"Bot {b.id}, Chat {chat_id}: Skipping poll ID {poll.id} due to time or day mismatch.")
+                    ...
 
 def send_telegram_alert(message):
     """Отправляет сообщение в Telegram-чат."""

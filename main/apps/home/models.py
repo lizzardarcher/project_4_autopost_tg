@@ -127,7 +127,6 @@ class Post(models.Model):
     post_time = models.TimeField(null=True, blank=True, verbose_name='Время публикации')
     id = models.AutoField(primary_key=True, editable=False)
 
-
     is_for_sched = models.BooleanField(default=False, null=True, blank=True, verbose_name='Для отправки по расписанию')
     sched_datetime = models.DateTimeField(default=None, null=True, blank=True,
                                           verbose_name='Дата и время отложенной отправки')

@@ -33,15 +33,15 @@ def post():
                         except:
                             chat_num_id = chat_reference
                         try:
-                            if 'jpg' in mediafile or 'jpeg' in mediafile:
+                            if 'jpg' in mediafile.lower() or 'jpeg' in mediafile.lower() or 'png' in mediafile.lower():
                                 bot.send_photo(chat_id=chat_num_id, photo=open(MEDIA_ROOT + mediafile, 'rb'),
                                                caption=text,
                                                parse_mode='HTML')
-                            elif 'mp3' in mediafile:
+                            elif 'mp3' in mediafile.lower():
                                 bot.send_audio(chat_id=chat_num_id, audio=open(MEDIA_ROOT + mediafile, 'rb'),
                                                caption=text,
                                                parse_mode='HTML')
-                            elif 'mp4' in mediafile or 'mpeg' in mediafile or 'avi' in mediafile or 'mkv' in mediafile:
+                            elif 'mp4' in mediafile.lower() or 'mpeg' in mediafile.lower() or 'avi' in mediafile.lower() or 'mkv' in mediafile.lower():
                                 bot.send_video(chat_id=chat_num_id, video=open(MEDIA_ROOT + mediafile, 'rb'),
                                                caption=text,
                                                parse_mode='HTML')
