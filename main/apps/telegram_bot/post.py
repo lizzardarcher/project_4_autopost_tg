@@ -30,8 +30,6 @@ MEDIA_ROOT = '/var/www/html/main/core/static/media/'
 def send_telegram_message(bot, chat_id, text=None, mediafile=None):
     """Отправляет сообщение в Telegram чат, обрабатывая различные типы медиа."""
     try:
-        logger.info(f"Attempting to send Telegram message to chat ID: {chat_id}")
-
         if mediafile:
             full_media_path = MEDIA_ROOT + mediafile
             if text is None:
@@ -39,13 +37,13 @@ def send_telegram_message(bot, chat_id, text=None, mediafile=None):
             logger.info(f"Sending media file: {full_media_path}")
 
             with open(full_media_path, 'rb') as f:
-                if 'jpg' in mediafile or 'jpeg' in mediafile:
+                if 'jpg' in mediafile.lower() or 'jpeg' in mediafile.lower() or 'png' in mediafile.lower():
                     logger.info(f"Sending photo with caption: {text}")
                     bot.send_photo(chat_id=chat_id, photo=f, caption=text, parse_mode='HTML')
-                elif 'mp3' in mediafile:
+                elif 'mp3' in mediafile.lower():
                     logger.info(f"Sending audio with caption: {text}")
                     bot.send_audio(chat_id=chat_id, audio=f, caption=text, parse_mode='HTML')
-                elif 'mp4' in mediafile or 'mpeg' in mediafile or 'avi' in mediafile or 'mkv' in mediafile:
+                elif 'mp4' in mediafile.lower() or 'mpeg' in mediafile.lower() or 'avi' in mediafile.lower() or 'mkv' in mediafile.lower():
                     logger.info(f"Sending video with caption: {text}")
                     bot.send_video(chat_id=chat_id, video=f, caption=text, parse_mode='HTML')
                 else:
@@ -60,8 +58,7 @@ def send_telegram_message(bot, chat_id, text=None, mediafile=None):
         return True
 
     except apihelper.ApiException as e:
-        logger.error(f"Telegram API error: {e} Chat ID: {chat_id}")
-        logger.error(traceback.format_exc())
+        logger.error(f"Telegram API error: {e} Chat ID: {chat_id} Bot ID: {Chat.objects.filter(chat_id=chat_id).first().bot.title}")
         send_telegram_alert(
             f"Ошибка отправки Telegram сообщения: {e} "
             f"Чат ID: {Chat.objects.filter(chat_id=chat_id).first()}"
@@ -80,7 +77,6 @@ def send_telegram_message(bot, chat_id, text=None, mediafile=None):
 
     except Exception as e:
         logger.error(f"General error sending message: {e} Chat ID: {chat_id}")
-        logger.error(traceback.format_exc())
         return False  # Indicate failure
 
 
@@ -111,14 +107,12 @@ def send_telegram_poll(bot, chat_id, question, options, is_anonymous):
 
     except apihelper.ApiException as e:
         logger.error(f"Telegram API error sending poll: {e} Chat ID: {chat_id}")
-        logger.error(traceback.format_exc())
         if '403' in str(e):
             logger.warning(f"Bot is not an administrator in chat {chat_id}")
         return False  # Indicate failure
 
     except Exception as e:
         logger.error(f"General error sending poll: {e} Chat ID: {chat_id}")
-        logger.error(traceback.format_exc())
         return False  # Indicate failure
 
 
@@ -139,28 +133,29 @@ def process_bot(b):
 
         for chat in chats:
             chat_id = chat.chat_id if hasattr(chat, 'chat_id') and chat.chat_id else chat.reference  # Get chat ID safely
+            try:
+                for message in messages:
+                    try:
+                        post_time = datetime.strptime(message.post_time.__str__(), '%H:%M:%S').strftime('%H:%M')
+                    except Exception as e:
+                        break
+                    server_time_plus = datetime.strftime(datetime.now() + timedelta(minutes=3), '%H:%M')
 
-            for message in messages:
-                try:
-                    post_time = datetime.strptime(message.post_time.__str__(), '%H:%M:%S').strftime('%H:%M')
-                except Exception as e:
-                    break
-                server_time_plus = datetime.strftime(datetime.now() + timedelta(minutes=3), '%H:%M')
+                    if post_time >= datetime.now().strftime('%H:%M') and post_time < server_time_plus and message.day == post_bot_day:
+                        logger.info(f"Bot {b.id}, Chat {chat_id}: Sending message ID {message.id} with text: {message.text[:50]}... (truncated)")
+                        media_file_name = message.media_file.name if message.media_file else None
+                        if send_telegram_message(bot, chat_id, message.text, media_file_name):
+                            Post.objects.filter(id=message.id).update(is_sent=True)
+                            chat.error = ''
+                            chat.save()
+                        else:
+                            chat.error = 'Failed to send message. See logs.'
+                            chat.save()
 
-                if post_time >= datetime.now().strftime('%H:%M') and post_time < server_time_plus and message.day == post_bot_day:
-                    logger.warning(f"Bot {b.id}, Chat {chat_id}: Sending message ID {message.id} with text: {message.text[:50]}... (truncated)")
-                    media_file_name = message.media_file.name if message.media_file else None
-                    if send_telegram_message(bot, chat_id, message.text, media_file_name):
-                        Post.objects.filter(id=message.id).update(is_sent=True)
-                        chat.error = ''
-                        chat.save()
                     else:
-                        chat.error = 'Failed to send message. See logs.'
-                        chat.save()
-
-                else:
-                    ...
-
+                        ...
+            except Exception as e:
+                logger.error(f"Error processing message: {e}")
             # Process polls
             for poll in polls:
                 post_time = poll.post_time.strftime('%H:%M')  # Directly format datetime object
@@ -214,11 +209,23 @@ def post():
         messages = Post.objects.filter(is_sent=False, day=post_bot_day, bot=b)
         polls = Poll.objects.filter(is_sent=False, day=post_bot_day, bot=b)
 
+
+
+        msg_active = Post.objects.filter(is_sent=False, bot=b)
+        polls_active = Poll.objects.filter(is_sent=False, bot=b)
+
         logger.debug(
             f"Bot {b.title}: Checking for scheduled day/date update. Messages: {messages.count()}, Polls: {polls.count()}")
 
-        if not messages.exists() and not polls.exists():
+        if not messages.exists() and not polls.exists() and msg_active.exists() and polls_active.exists():
             new_start_date_bot = start_date_bot + timedelta(days=1)
+
+
+        # logger.debug(
+        #     f"Bot {b.title}: Checking for scheduled day/date update. Messages: {messages.count()}, Polls: {polls.count()}")
+        #
+        # if not messages.exists() and not polls.exists():
+        #     new_start_date_bot = start_date_bot + timedelta(days=1)
 
             b.day = post_bot_day + 1
             b.start_date = new_start_date_bot
@@ -226,9 +233,7 @@ def post():
             logger.info(f'Updating bot {b.title} to day {post_bot_day + 1} and date {new_start_date_bot}')
         else:
             logger.debug(
-                f"Bot {b.title}: Not updating day/date because messages or polls are still pending."
-                f"Messages: {messages.count()} {messages.first().post_time} {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, Polls: {polls.count()} {polls}")
-
+                f"Bot {b.title}: Not updating day/date because messages or polls are still pending.")
     logger.info("Finished 'post' function.")
 
 
