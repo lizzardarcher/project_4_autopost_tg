@@ -169,9 +169,7 @@ class PostListView(SuccessMessageMixin, LoginRequiredMixin, ListView):
     success_message = 'Пост успешно создан!'
 
     def get_queryset(self):
-        qs = self.model.objects.filter(
-            bot=UserSettings.objects.get(user=self.request.user).bot_selected, is_for_sched=False).order_by('day',
-                                                                                                            'post_time')
+        qs = self.model.objects.filter(bot=UserSettings.objects.get(user=self.request.user).bot_selected, is_for_sched=False).order_by('day', 'post_time')
         return qs
 
 

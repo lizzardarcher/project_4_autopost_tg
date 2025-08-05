@@ -9,7 +9,7 @@ from utils import djangoORM
 from apps.home.models import Post, Bot, Chat, Poll
 
 LOG_FILENAME = 'log.log'
-LOG_LEVEL = logging.WARNING
+LOG_LEVEL = logging.INFO
 LOG_MAX_BYTES = 10 * 1024 * 1024
 LOG_BACKUP_COUNT = 5
 logger = logging.getLogger(__name__)
@@ -119,7 +119,6 @@ def send_telegram_poll(bot, chat_id, question, options, is_anonymous):
 def process_bot(b):
     """Обрабатывает одного бота, отправляя сообщения и опросы."""
 
-
     bot = TeleBot(token=b.token)
     start_date_bot = b.start_date
     is_start_date_bot = start_date_bot == date.today()
@@ -206,30 +205,31 @@ def post():
         start_date_bot = b.start_date
         post_bot_day = b.day
 
-        messages = Post.objects.filter(is_sent=False, day=post_bot_day, bot=b)
-        polls = Poll.objects.filter(is_sent=False, day=post_bot_day, bot=b)
+        messages = Post.objects.filter(is_sent=False, day=post_bot_day, bot=b, is_for_sched=False)                      # Unsent messages for the current day
+        polls = Poll.objects.filter(is_sent=False, day=post_bot_day, bot=b)                                             # Unsent polls for the current day
+
+        # message of the last day
+        messages_last_day = Post.objects.filter(bot=b, is_for_sched=False)
+        days_list = []
+        for m in messages_last_day:
+            days_list.append(m.day)
+        messages_last_day = max(days_list) if days_list else 0
+
+        logger.debug(f"Bot {b.title}: Checking for scheduled day/date update. Messages: {messages.count()}, Polls: {polls.count()}")
 
 
-
-        msg_active = Post.objects.filter(is_sent=False, bot=b)
-        polls_active = Poll.objects.filter(is_sent=False, bot=b)
-
-        logger.debug(
-            f"Bot {b.title}: Checking for scheduled day/date update. Messages: {messages.count()}, Polls: {polls.count()}")
-
-        if not messages.exists() and not polls.exists() and msg_active.exists() and polls_active.exists():
+        if not messages.exists() and not polls.exists():
             new_start_date_bot = start_date_bot + timedelta(days=1)
 
+            if messages_last_day == post_bot_day and not Post.objects.filter(day=messages_last_day, is_sent=False, bot=b, is_for_sched=True).exists():
+                b.day = 1
+                b.is_started=False
+            else:
+                b.day = post_bot_day + 1
+                b.start_date = new_start_date_bot
 
-        # logger.debug(
-        #     f"Bot {b.title}: Checking for scheduled day/date update. Messages: {messages.count()}, Polls: {polls.count()}")
-        #
-        # if not messages.exists() and not polls.exists():
-        #     new_start_date_bot = start_date_bot + timedelta(days=1)
-
-            b.day = post_bot_day + 1
-            b.start_date = new_start_date_bot
             b.save()
+
             logger.info(f'Updating bot {b.title} to day {post_bot_day + 1} and date {new_start_date_bot}')
         else:
             logger.debug(
